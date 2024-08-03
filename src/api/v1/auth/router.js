@@ -1,5 +1,11 @@
 const { Router } = require("express");
 const router = Router();
+
+const {
+    signupSchema,
+    loginSchema
+} = require('./validations.js');
+
 const {
     signup,
     login
