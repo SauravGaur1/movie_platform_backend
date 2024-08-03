@@ -26,7 +26,7 @@ const sendFailureResp = (res, {
         ...rest
     }
 
-    status ??= 400;
+    status ??= 500;
 
     res.status(status)
        .json(resp);
