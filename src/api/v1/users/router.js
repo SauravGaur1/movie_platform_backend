@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const router = Router();
 
+const { validate } = require("../../../middlewares/joivalidators.js");
+
 const {
     getUserByIdSchema,
     updateUserByIdScheme,
@@ -11,7 +13,13 @@ const {
     updateUserById
 } = require('./controller.js');
 
-router.get('/getUserById', getUserById);
-router.patch('/updateUserById', updateUserById);
+router.get('/getUserById', [
+    validate(getUserByIdSchema),
+    getUserById
+]);
+router.patch('/updateUserById', [
+    validate(updateUserByIdScheme),
+    updateUserById
+]);
 
 module.exports = router;
