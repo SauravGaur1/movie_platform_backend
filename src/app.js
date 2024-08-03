@@ -6,6 +6,9 @@ const appRouter = Router();
 
 const config = require('./config/config.js');
 const apiRouter = require('./api/router.js');
+
+app.use(express.json());
+app.use(express.static('public'));
   
 appRouter.use(apiRouter);
 appRouter.use('*', (req, res) => {
