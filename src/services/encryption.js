@@ -1,5 +1,4 @@
 let {salt} = require('../config/config.js').encryption;
-salt = Number(salt);
 const bcrypt = require('bcrypt');
 
 class Encryptor {

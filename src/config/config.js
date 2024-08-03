@@ -13,7 +13,7 @@ module.exports = {
         }
     },
     encryption: {
-        salt: process.env.BCRYPT_SALT,
+        salt: Number(process.env.BCRYPT_SALT),
     },
     db: {
         development: {
