@@ -1,5 +1,11 @@
 const { Router } = require("express");
 const router = Router();
+
+const {
+    getUserByIdSchema,
+    updateUserByIdScheme,
+} = require('./validations.js');
+
 const {
     getUserById,
     updateUserById
