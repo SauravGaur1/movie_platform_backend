@@ -1,15 +1,22 @@
 const config = require('./config/config.js');
 const app  = require('./app.js');
+const {sequelize, models} = require("./database/index.js");
 
-const enviornment = config.enviornment.active == "dev"
-        ? config.enviornment.development 
-        : config.enviornment.production;
+const enviornment = config.enviornment.active == "production"
+        ? config.enviornment.production 
+        : config.enviornment.development;
 
 const {
     port : PORT,
     host : HOST
 } = enviornment;
 
-app.listen(PORT, HOST , ()=> {
-    console.log(`server started @: http://${HOST}:${PORT}`);
-});
+
+(async () => {
+    await sequelize.authenticate();
+    console.log("DB Connected");
+    app.listen(PORT, HOST , ()=> {
+        console.log(`server started @: http://${HOST}:${PORT}`);
+    });
+})()
+
