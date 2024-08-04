@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 
 module.exports = { 
     enviornment: {
@@ -24,5 +24,8 @@ module.exports = {
             port: Number(process.env.DB_PORT),
             dialect: 'mariadb',
         },
+    },
+    jsonWebToken: {
+      secretKey: process.env.JWT_SECRET,
     },
 };
