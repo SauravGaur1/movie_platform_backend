@@ -4,19 +4,18 @@ const jwt_secret_key = require("../config/config.js").jsonWebToken.secretKey;
 class JWT {
   static async createToken(payload) {
     try {
-      const token = await new Promise((resolve, reject) => {
-        jwt.sign(payload, jwt_secret_key, function (err, token) {
-          if (err) {
-            reject(err);
-          }
-
-          resolve(token);
-        });
-      });
-      //   console.log("token created: " + token);
-      return token;
+        const token = await new Promise((resolve, reject) => {
+            jwt.sign(payload, jwt_secret_key, (err, token) => {
+              if (err) {
+                return reject(err);
+              }
+              resolve(token);
+            });
+          });
+          return token;
+      
     } catch (error) {
-      throw new Error("Error Creating Token" + error);
+      throw new Error("Error Creating Token: " + error);
     }
   }
 
@@ -37,13 +36,14 @@ class JWT {
   }
 }
 
+/*
+// To see if it is working
 async function main() {
   try {
     const user = {
       id: "101",
       email: "vagishmlk@gmail.com",
       role: "admin",
-
     };
 
     const token = await JWT.createToken(user);
@@ -58,6 +58,8 @@ async function main() {
   // await console.log(token);
   // JWT.verifyToken(token);
 }
-main();
 
+
+main();
+*/
 module.exports = JWT;
