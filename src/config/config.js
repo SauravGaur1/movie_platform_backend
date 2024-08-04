@@ -1,27 +1,31 @@
 require("dotenv").config();
 
-console.log('Loaded ENV JWT_SECRET:',process.env.JWT_SECRET ); // This should log your secret key
-console.log('salt:',process.env.BCRYPT_SALT); // This should log your secret key
-
-
-module.exports = {
-  enviornment: {
-    active: "dev",
-    development: {
-      port: 3000,
-      host: "127.0.0.1",
+module.exports = { 
+    enviornment: {
+        active: "development",
+        development: {
+            port: process.env.PORT,
+            host: process.env.HOST,
+        },
+        production: {
+            port: 80,
+            host: "0.0.0.0",
+        }
     },
-    production: {
-      port: 80,
-      host: "0.0.0.0",
+    encryption: {
+        salt: Number(process.env.BCRYPT_SALT),
     },
-  },
-  encryption: {
-    salt: process.env.BCRYPT_SALT,
-  },
-  jsonWebToken: {
-    secretKey: process.env.JWT_SECRET,
-  },
+    db: {
+        development: {
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            host: process.env.DB_HOST,
+            port: Number(process.env.DB_PORT),
+            dialect: 'mariadb',
+        },
+    },
+    jsonWebToken: {
+      secretKey: process.env.JWT_SECRET,
+    },
 };
-
-console.log(module.exports);
