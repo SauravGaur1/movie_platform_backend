@@ -2,18 +2,10 @@ const jwt = require("jsonwebtoken");
 const jwt_secret_key = require("../config/config.js").jsonWebToken.secretKey;
 
 class JWT {
-  static async createToken(payload) {
+  static createToken(payload) {
     try {
-        const token = await new Promise((resolve, reject) => {
-            jwt.sign(payload, jwt_secret_key, (err, token) => {
-              if (err) {
-                return reject(err);
-              }
-              resolve(token);
-            });
-          });
-          return token;
-      
+      const token = jwt.sign(payload, jwt_secret_key);
+      return token;
     } catch (error) {
       throw new Error("Error Creating Token: " + error);
     }
@@ -21,14 +13,7 @@ class JWT {
 
   static async verifyToken(token) {
     try {
-      const extractInfo = await new Promise((resolve, reject) => {
-        jwt.verify(token, jwt_secret_key, function (err, decoded) {
-          if (err) {
-            reject(err);
-          }
-          resolve(decoded);
-        });
-      });
+      const extractInfo = jwt.verify(token, jwt_secret_key);
       return extractInfo;
     } catch (error) {
       throw new Error("Error Verifying Token", error.message);
@@ -37,8 +22,8 @@ class JWT {
 }
 
 /*
-// To see if it is working
-async function main() {
+    // To see if it is working
+function main() {
   try {
     const user = {
       id: "101",
@@ -46,11 +31,11 @@ async function main() {
       role: "admin",
     };
 
-    const token = await JWT.createToken(user);
-    console.log("Created Token: ", token);
+    const token = JWT.createToken(user);
+    console.log("\nGenerated Token: ", token);
 
-    const decoded = await JWT.verifyToken(token);
-    console.log("Decoded Token Data: ", decoded);
+    const decoded = JWT.verifyToken(token);
+    console.log("\nDecoded Token Data: ", decoded);
   } catch (err) {
     console.error("Error", err.message);
   }
@@ -59,7 +44,7 @@ async function main() {
   // JWT.verifyToken(token);
 }
 
-
 main();
 */
+
 module.exports = JWT;
