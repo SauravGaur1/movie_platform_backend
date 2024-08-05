@@ -39,6 +39,11 @@ class Sanitize {
       }
       return value;
     }
+
+    static toUnixPath(path) {
+      path = path.replace(/\\/g,'/');
+      return path;
+    }
   
     static sanitizeArray(array, sanitizer) {
       if (Array.isArray(array) && typeof sanitizer === 'function') {
@@ -68,6 +73,7 @@ module.exports = {
     toLowerCase: Sanitize.toLowerCase,
     toUpperCase: Sanitize.toUpperCase,
     sanitizeArray: Sanitize.sanitizeArray,
-    sanitizeObject: Sanitize.sanitizeObject
+    sanitizeObject: Sanitize.sanitizeObject,
+    toUnixPath: Sanitize.toUnixPath,
 };
   

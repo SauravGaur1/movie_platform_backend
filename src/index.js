@@ -1,6 +1,6 @@
 const config = require('./config/config.js');
 const app  = require('./app.js');
-const {sequelize, models} = require("./database/index.js");
+const sequelize = require("./database/mariaConn.js");
 
 const enviornment = config.enviornment.active == "production"
         ? config.enviornment.production 

@@ -1,17 +1,16 @@
 const path = require('path');
 const glob = require('glob');
-const Sequelize = require('sequelize');
-const sequelize = require('./mariaConn.js');
+const { toUnixPath } = require('../utils/sanitize.js');
 const models = {};
 
-const modelsPath = path.join(__dirname, '../api/v1/**/*.js');  // Adjust the path as necessary
+let modelsPath = toUnixPath(path.join(__dirname, '..', 'api', 'v1', '**', 'model.js'));
 
 glob.sync(modelsPath).forEach(file => {
-  if (file.endsWith('model.js')) {
-    try{
-        const model = require(path.resolve(file))(sequelize, Sequelize.DataTypes);
-        models[model.name] = model;
-    } catch {}
+  try{
+    const model = require(path.resolve(file));
+    models[model.name] = model;
+  } catch (error) {
+    console.log(error)
   }
 });
 
@@ -23,5 +22,4 @@ Object.keys(models).forEach(modelName => {
 
 module.exports = { 
   models,
-  sequelize
 };
