@@ -1,8 +1,9 @@
 const path = require('path');
 const glob = require('glob');
+const { toUnixPath } = require('../utils/sanitize.js');
 const models = {};
 
-let modelsPath = path.posix.resolve(path.join(__dirname, '..', 'api', 'v1', '**', 'model.js'));
+let modelsPath = toUnixPath(path.join(__dirname, '..', 'api', 'v1', '**', 'model.js'));
 
 glob.sync(modelsPath).forEach(file => {
   try{
