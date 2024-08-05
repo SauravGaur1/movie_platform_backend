@@ -15,8 +15,14 @@ glob.sync(modelsPath).forEach(file => {
 });
 
 Object.keys(models).forEach(modelName => {
-  if (models[modelName].associate) {
-    models[modelName].associate(models);
+
+  try {
+    models[modelName].sync({alter: true});
+    if (models[modelName].associate) {
+      models[modelName].associate(models);
+    }
+  } catch (e) {
+    console.log(e.message);
   }
 });
 
