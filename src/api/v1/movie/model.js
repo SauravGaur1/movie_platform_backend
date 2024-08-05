@@ -1,12 +1,16 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../../../database/mariaConn')
 
-class Movie extends Model {}
+class Movie extends Model {
+  static associate(models) {
+
+  }
+}
 
 Movie.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
@@ -60,9 +64,10 @@ Movie.init(
     },
   },
   {
-    sequelize,
-    freezeTableName: true,
+    sequelize
   },
 );
 
-console.log(Movie === sequelize.models.Movie); 
+Movie.sync()
+
+module.exports = Movie
