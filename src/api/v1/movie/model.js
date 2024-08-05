@@ -1,5 +1,6 @@
 const { DataTypes, Model } = require('sequelize');
-const sequelize = require('../../../database/mariaConn')
+
+const { sequelize } = require('../../../database/database.js');
 
 class Movie extends Model {
   static associate(models) {
@@ -67,7 +68,5 @@ Movie.init(
     sequelize
   },
 );
-
-Movie.sync()
 
 module.exports = Movie
