@@ -2,14 +2,14 @@ const { Model, DataTypes } = require("sequelize");
 
 const {sequelize} = require("../../../database/database.js");
 
-
-class State extends Model {
+class Language extends Model {
     static associate(models) {
 
     }
+
 }
 
-State.init(
+Language.init(
     {
         id: {
             type : DataTypes.INTEGER,
@@ -18,7 +18,14 @@ State.init(
         },
         title: {
             type : DataTypes.STRING,
-            limit: 256,
+            allowNull: false
+        },
+        icon: {
+            type : DataTypes.STRING,
+            allowNull: false
+        },
+        short_name: {
+            type : DataTypes.STRING,
             allowNull: false
         }
     },
@@ -26,4 +33,6 @@ State.init(
 )
 
 
-module.exports = State
+module.exports = Language
+
+

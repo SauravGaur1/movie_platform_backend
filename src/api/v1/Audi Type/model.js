@@ -2,14 +2,14 @@ const { Model, DataTypes } = require("sequelize");
 
 const {sequelize} = require("../../../database/database.js");
 
-
-class State extends Model {
+class AudiType extends Model {
     static associate(models) {
 
     }
+
 }
 
-State.init(
+AudiType.init(
     {
         id: {
             type : DataTypes.INTEGER,
@@ -18,7 +18,10 @@ State.init(
         },
         title: {
             type : DataTypes.STRING,
-            limit: 256,
+            allowNull: false
+        },
+        short_name: {
+            type : DataTypes.STRING,
             allowNull: false
         }
     },
@@ -26,4 +29,6 @@ State.init(
 )
 
 
-module.exports = State
+module.exports = AudiType
+
+

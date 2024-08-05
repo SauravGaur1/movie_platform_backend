@@ -2,28 +2,31 @@ const { Model, DataTypes } = require("sequelize");
 
 const {sequelize} = require("../../../database/database.js");
 
-
-class State extends Model {
+class City extends Model {
     static associate(models) {
 
     }
+
 }
 
-State.init(
+City.init(
     {
         id: {
             type : DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey:  true
         },
+        state_id: {
+            type : DataTypes.INTEGER,
+            allowNull: false,
+            foreignKey: 'state_id',
+        },
         title: {
             type : DataTypes.STRING,
-            limit: 256,
             allowNull: false
         }
     },
     {sequelize}
 )
 
-
-module.exports = State
+module.exports = City
