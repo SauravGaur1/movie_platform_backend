@@ -3,7 +3,20 @@ const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../../../database/database.js');
 
 class Show extends Model {
-  static associate(models) {}
+  static associate(models) {
+    models.Audi.hasMany(Show, {
+      foreignKey: 'audi_id',
+    });
+    models.Movie.hasMany(Show, {
+      foreignKey: 'movie_id',
+    });
+    models.Language.hasMany(Show, {
+      foreignKey: 'language_id',
+    });
+    Show.belongsTo(models.Audi);
+    Show.belongsTo(models.Movie);
+    Show.belongsTo(models.Language);
+  }
 }
 
 Show.init(
@@ -13,15 +26,15 @@ Show.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    audi: {
+    audi_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    movie: {
+    movie_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    lang: {
+    language_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

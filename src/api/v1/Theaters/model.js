@@ -3,7 +3,16 @@ const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../../../database/database.js');
 
 class Theaters extends Model {
-  static associate(models) {}
+  static associate(models) {
+    models.Admin.hasMany(Theaters, {
+      foreignKey: 'admin_id',
+    });
+    models.City.hasMany(Theaters, {
+      foreignKey: 'city_id',
+    });
+    Theaters.belongsTo(models.Admin);
+    Theaters.belongsTo(models.City);
+  }
 }
 
 Theaters.init(

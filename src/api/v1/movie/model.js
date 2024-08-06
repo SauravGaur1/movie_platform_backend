@@ -4,7 +4,10 @@ const { sequelize } = require('../../../database/database.js');
 
 class Movie extends Model {
   static associate(models) {
-
+    models.Certification.hasMany(Movie, {
+      foreignKey: 'certification_type',
+    });
+    Movie.belongsTo(models.Certification);
   }
 }
 

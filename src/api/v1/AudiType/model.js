@@ -30,5 +30,3 @@ AudiType.init(
 
 
 module.exports = AudiType
-
-

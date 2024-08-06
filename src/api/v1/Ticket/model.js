@@ -3,7 +3,20 @@ const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../../../database/database.js');
 
 class Ticket extends Model {
-  static associate(models) {}
+  static associate(models) {
+    models.User.hasMany(Ticket, {
+      foreignKey: 'user_id',
+    });
+    models.Show.hasOne(Ticket, {
+      foreignKey: 'show_id',
+    });
+    models.Transaction.hasOne(Ticket, {
+      foreignKey: 'transaction_success',
+    });
+    Ticket.belongsTo(models.User);
+    Ticket.belongsTo(models.Show);
+    Ticket.belongsTo(models.Transaction);
+  }
 }
 
 Ticket.init(
