@@ -2,6 +2,7 @@ const path = require('path');
 const glob = require('glob');
 const { toUnixPath } = require('../utils/sanitize.js');
 const models = {};
+const async = require("async");
 
 let modelsPath = toUnixPath(path.join(__dirname, '..', 'api', 'v1', '**', 'model.js'));
 
@@ -13,6 +14,54 @@ glob.sync(modelsPath).forEach(file => {
     console.log(error)
   }
 });
+
+const {
+  State,
+  City,
+  Admin,
+  Theaters,
+  AudiType,
+  Audi,
+  Certification,
+  Genre,
+  Language,
+  Movie,
+  Show,
+  Transaction,
+  User,
+  Ticket
+} = models;
+
+let tableSyncSequence = [
+  State,
+  City,
+  Admin,
+  Theaters,
+  AudiType,
+  Audi,
+  Certification,
+  Genre,
+  Language,
+  Movie,
+  Show,
+  Transaction,
+  User,
+  Ticket
+]
+
+tableSyncSequenceFunction = tableSyncSequence.map((model) => {
+  return async () => {
+    await model.sync({alter: true})
+  };
+})
+
+try {
+  async.series(tableSyncSequenceFunction, (err, data) => {
+    console.log(err, data);
+  })
+} catch (e) {
+  console.log(e);
+}
 
 Object.keys(models).forEach(modelName => {
   try {

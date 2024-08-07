@@ -4,15 +4,10 @@ const { sequelize } = require('../../../database/database.js');
 
 class Audi extends Model {
   static associate(models) {
-    models.AudiType.hasMany(Audi, {
-      foreignKey: 'type',
-    });
-    models.Theaters.hasMany(Audi, {
-      foreignKey: 'theater_id',
-    });
     Audi.belongsTo(models.AudiType, {
       foreignKey: 'type',
     });
+
     Audi.belongsTo(models.Theaters, {
       foreignKey: 'theater_id',
     });
@@ -46,8 +41,21 @@ Audi.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    createdAt: {
+      type: 'TIMESTAMP',
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false
+    },
+    updatedAt: {
+      type: 'TIMESTAMP',
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+      allowNull: false
+    }
   },
-  { sequelize },
+
+    {
+        timestamps: false, sequelize
+    },
 );
 
 module.exports = Audi;

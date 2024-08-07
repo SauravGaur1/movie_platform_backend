@@ -4,10 +4,9 @@ const { sequelize } = require('../../../database/database.js');
 
 class Movie extends Model {
   static associate(models) {
-    models.Certification.hasMany(Movie, {
-      foreignKey: 'certification_type',
+      Movie.belongsTo(models.Certification, {
+          foreignKey: 'certification_type',
     });
-    Movie.belongsTo(models.Certification);
   }
 }
 
@@ -30,10 +29,6 @@ Movie.init(
     },
     thumbnail_landscape: {
       type: DataTypes.JSON,
-    },
-    lang: {
-      type: DataTypes.JSON,
-      allowNull: false,
     },
     lang: {
       type: DataTypes.JSON,
@@ -65,9 +60,20 @@ Movie.init(
     release: {
         type: DataTypes.DATE,
         allowNull: false
-    },
+    }, createdAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          allowNull: false
+      },
+      updatedAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+          allowNull: false
+      }
   },
-  {
+
+    {
+        timestamps: false,
     sequelize
   },
 );

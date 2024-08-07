@@ -4,18 +4,17 @@ const { sequelize } = require('../../../database/database.js');
 
 class Show extends Model {
   static associate(models) {
-    models.Audi.hasMany(Show, {
-      foreignKey: 'audi_id',
+
+      Show.belongsTo(models.Audi, {
+          foreignKey: 'audi_id',
     });
-    models.Movie.hasMany(Show, {
-      foreignKey: 'movie_id',
+
+      Show.belongsTo(models.Movie, {
+          foreignKey: 'movie_id'
     });
-    models.Language.hasMany(Show, {
-      foreignKey: 'language_id',
+      Show.belongsTo(models.Language, {
+          foreignKey: 'language_id'
     });
-    Show.belongsTo(models.Audi);
-    Show.belongsTo(models.Movie);
-    Show.belongsTo(models.Language);
   }
 }
 
@@ -45,9 +44,21 @@ Show.init(
     end_time: {
       type: DataTypes.DATE,
       allowNull: false,
-    }
+    }, createdAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          allowNull: false
+      },
+      updatedAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+          allowNull: false
+      }
   },
-  { sequelize },
+
+    {
+        timestamps: false, sequelize
+    },
 );
 
 module.exports = Show;

@@ -27,9 +27,21 @@ Language.init(
         short_name: {
             type : DataTypes.STRING,
             allowNull: false
+        }, createdAt: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
+        },
+        updatedAt: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+            allowNull: false
         }
     },
-    {sequelize}
+
+    {
+        timestamps: false, sequelize
+    }
 )
 
 
