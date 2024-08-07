@@ -15,7 +15,6 @@ glob.sync(modelsPath).forEach(file => {
   }
 });
 
-
 const {
   State,
   City,
