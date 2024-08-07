@@ -18,13 +18,23 @@ Object.keys(models).forEach(modelName => {
 
   try {
     models[modelName].sync({alter: true});
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
+Object.keys(models).forEach(modelName => {
+
+  try {
     if (models[modelName].associate) {
-      models[modelName].associate(models);
+      // models[modelName].associate(models);
     }
   } catch (e) {
     console.log(e.message);
   }
 });
+
+console.log(models);
 
 module.exports = { 
   models,
