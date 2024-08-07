@@ -3,6 +3,7 @@ const glob = require('glob');
 const { toUnixPath } = require('../utils/sanitize.js');
 const models = {};
 
+const {sequelize} = require("./database")
 let modelsPath = toUnixPath(path.join(__dirname, '..', 'api', 'v1', '**', 'model.js'));
 
 glob.sync(modelsPath).forEach(file => {
@@ -14,27 +15,18 @@ glob.sync(modelsPath).forEach(file => {
   }
 });
 
-Object.keys(models).forEach(modelName => {
-
-  try {
-    models[modelName].sync({alter: true});
-  } catch (e) {
-    console.log(e.message);
-  }
-});
+sequelize.sync({alter: true});
 
 Object.keys(models).forEach(modelName => {
 
   try {
     if (models[modelName].associate) {
-      // models[modelName].associate(models);
+      models[modelName].associate(models);
     }
   } catch (e) {
     console.log(e.message);
   }
 });
-
-console.log(models);
 
 module.exports = { 
   models,
