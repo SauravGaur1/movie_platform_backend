@@ -10,7 +10,16 @@ class DataBase {
              dialect: dbConfig.dialect,
              port: dbConfig.port,
              logging: false,
-         });
+             pool: {
+                max: dbConfig.dbMaxConnection,
+                min: dbConfig.dbMinConnection,
+                acquire: dbConfig.dbAcquireTimeout,
+                idle: dbConfig.dbIdleTimeout,
+            },
+            dialectOptions: {
+                connectTimeout: dbConfig.dbConnectionTimeout,
+            },
+         },);
      }
 
      connect = async () =>
