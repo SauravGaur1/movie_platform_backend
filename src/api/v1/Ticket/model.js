@@ -4,18 +4,17 @@ const { sequelize } = require('../../../database/database.js');
 
 class Ticket extends Model {
   static associate(models) {
-    models.User.hasMany(Ticket, {
-      foreignKey: 'user_id',
+      Ticket.belongsTo(models.User, {
+          foreignKey: 'user_id'
     });
-    models.Show.hasOne(Ticket, {
-      foreignKey: 'show_id',
+      Ticket.belongsTo(models.Show, {
+          foreignKey: 'show_id'
     });
-    models.Transaction.hasOne(Ticket, {
-      foreignKey: 'transaction_success',
+      Ticket.belongsTo(models.Transaction, {
+          foreignKey: 'transaction_success'
     });
-    Ticket.belongsTo(models.User);
-    Ticket.belongsTo(models.Show);
-    Ticket.belongsTo(models.Transaction);
+
+      // TODO : JSON Constraint
   }
 }
 
@@ -53,9 +52,21 @@ Ticket.init(
     },
     transaction_fail: {
       type: DataTypes.JSON,
-    }
+    }, createdAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          allowNull: false
+      },
+      updatedAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+          allowNull: false
+      }
   },
-  { sequelize },
+
+    {
+        timestamps: false, sequelize
+    },
 );
 
 module.exports = Ticket;

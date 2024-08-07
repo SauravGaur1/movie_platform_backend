@@ -4,14 +4,14 @@ const { sequelize } = require('../../../database/database.js');
 
 class Theaters extends Model {
   static associate(models) {
-    models.Admin.hasMany(Theaters, {
-      foreignKey: 'admin_id',
+
+      Theaters.belongsTo(models.Admin, {
+          foreignKey: 'admin_id'
     });
-    models.City.hasMany(Theaters, {
-      foreignKey: 'city_id',
+
+      Theaters.belongsTo(models.City, {
+          foreignKey: 'city_id'
     });
-    Theaters.belongsTo(models.Admin);
-    Theaters.belongsTo(models.City);
   }
 }
 
@@ -45,9 +45,21 @@ Theaters.init(
     longitude: {
         type: DataTypes.FLOAT,
         allowNull: false
-    }
+    }, createdAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          allowNull: false
+      },
+      updatedAt: {
+          type: 'TIMESTAMP',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
+          allowNull: false
+      }
   },
-  { sequelize },
+
+    {
+        timestamps: false, sequelize
+    },
 );
 
 module.exports = Theaters;
