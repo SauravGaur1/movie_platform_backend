@@ -51,13 +51,13 @@ let tableSyncSequence = [
 
 tableSyncSequenceFunction = tableSyncSequence.map((model) => {
   return async () => {
-    await model.sync({alter: true})
+    await model.sync(/*{alter: true}*/)
   };
 })
 
 try {
   async.series(tableSyncSequenceFunction, (err, data) => {
-    console.log(err, data);
+    // console.log(err, data);
   })
 } catch (e) {
   console.log(e);
