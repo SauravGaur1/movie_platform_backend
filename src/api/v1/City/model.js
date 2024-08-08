@@ -8,7 +8,9 @@ class City extends Model {
             foreignKey: 'state_id'
         })
 
-        City.hasMany(models.Theaters);
+        City.hasMany(models.Theaters,{
+            foreignKey:'city_id'
+        });
     }
 
 }
