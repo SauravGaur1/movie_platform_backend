@@ -6,11 +6,11 @@ class Theaters extends Model {
   static associate(models) {
 
     Theaters.belongsTo(models.Admin, {
-      foreignKey: "admin_id",
+      foreignKey: 'admin_id',
     });
 
     Theaters.belongsTo(models.City, {
-      foreignKey: "city_id",
+      foreignKey: 'city_id',
     });
 
     
