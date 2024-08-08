@@ -7,6 +7,8 @@ class City extends Model {
         City.belongsTo(models.State, {
             foreignKey: 'state_id'
         })
+
+        City.hasMany(models.Theaters);
     }
 
 }

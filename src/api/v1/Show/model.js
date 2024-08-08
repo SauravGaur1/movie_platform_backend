@@ -15,6 +15,10 @@ class Show extends Model {
       Show.belongsTo(models.Language, {
           foreignKey: 'language_id'
     });
+
+    Show.hasMany(models.Ticket,{
+      foreignKey:'show_id'
+    });
   }
 }
 

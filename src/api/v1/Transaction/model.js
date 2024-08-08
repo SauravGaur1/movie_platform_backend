@@ -3,7 +3,11 @@ const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../../../database/database.js');
 
 class Transaction extends Model {
-  static associate(models) {}
+  static associate(models) {
+    Transaction.hasOne(models.Ticket,{
+      foreignKey:'transaction_success'
+    });
+  }
 }
 
 Transaction.init(

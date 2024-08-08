@@ -4,7 +4,7 @@ const {sequelize} = require("../../../database/database.js");
 
 class Certification extends Model {
     static associate(models) {
-
+        Certification.hasMany(models.Movie);
     }
 
 }

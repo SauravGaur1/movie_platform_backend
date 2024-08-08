@@ -1,11 +1,15 @@
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes, Model } = require("sequelize");
 
-const { sequelize } = require('../../../database/database.js');
+const { sequelize } = require("../../../database/database.js");
 
 class Movie extends Model {
   static associate(models) {
-      Movie.belongsTo(models.Certification, {
-          foreignKey: 'certification_type',
+    Movie.belongsTo(models.Certification, {
+      foreignKey: "certification_type",
+    });
+
+    Movie.hasMany(models.Show, {
+      foreignKey: "movie_id",
     });
   }
 }
@@ -35,47 +39,50 @@ Movie.init(
       allowNull: false,
     },
     trailer: {
-        type: DataTypes.TEXT
+      type: DataTypes.TEXT,
     },
     genre: {
-        type: DataTypes.JSON
+      type: DataTypes.JSON,
     },
     rating: {
-        type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
     },
     certification_type: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     duration: {
-        type: DataTypes.TIME,
-        allowNull: false
+      type: DataTypes.TIME,
+      allowNull: false,
     },
     director: {
-        type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     cast: {
-        type: DataTypes.JSON
+      type: DataTypes.JSON,
     },
     release: {
-        type: DataTypes.DATE,
-        allowNull: false
-    }, createdAt: {
-          type: 'TIMESTAMP',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-          allowNull: false
-      },
-      updatedAt: {
-          type: 'TIMESTAMP',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-          allowNull: false
-      }
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    createdAt: {
+      type: "TIMESTAMP",
+      defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+      allowNull: false,
+    },
+    updatedAt: {
+      type: "TIMESTAMP",
+      defaultValue: sequelize.literal(
+        "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+      ),
+      allowNull: false,
+    },
   },
 
-    {
-        timestamps: false,
-    sequelize
-  },
+  {
+    timestamps: false,
+    sequelize,
+  }
 );
 
-module.exports = Movie
+module.exports = Movie;

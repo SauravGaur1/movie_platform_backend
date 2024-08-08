@@ -5,6 +5,9 @@ const {sequelize} = require("../../../database/database.js");
 
 class State extends Model {
     static associate(models) {
+        State.hasMany(models.City,{
+            foreignKey:'state_id'
+        });
 
     }
 }
