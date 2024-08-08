@@ -3,7 +3,11 @@ const { Model, DataTypes } = require('sequelize');
 const { sequelize } = require('../../../database/database.js');
 
 class User extends Model {
-  static associate(models) {}
+  static associate(models) {
+    User.hasMany(models.Ticket,{
+      foreignKey:'user_id'
+    });
+  }
 }
 
 User.init(
