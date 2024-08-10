@@ -14,21 +14,16 @@ module.exports = {
     signup: async (req, res) => {
         const { role, name, mobile, email, password } = req.body;
         const model = roleArray[role];
-        // console.log(model);
         try {
             const data = await findUser(role, email, password);
-            console.log(data, "this is admin signup");
 
             if (!data) {
-                console.log("inside if 1");
                 const { dataValues } = await model.create({
                     name: name,
                     email: email,
                     mobile: mobile,
                     password: password,
                 });
-                console.log("inside if 2");
-                console.log(dataValues);
 
                 if (Object.keys(dataValues)?.length) {
                     const token = await generateUserToken(dataValues, role);
@@ -67,10 +62,6 @@ module.exports = {
             .then(async () => {
                 const { role, email, password } = req.body;
 
-                // console.log(role);
-                // console.log(email);
-                // console.log(password);
-
                 const user = await findUser(role, email, password);
 
                 if (!user) {
@@ -80,7 +71,6 @@ module.exports = {
                         },
                     });
                 }
-                // console.log(user.dataValues);
 
                 const token = await generateUserToken(user?.dataValues, role);
 
@@ -120,10 +110,6 @@ async function generateUserToken(dataValues, role) {
 async function findUser(role, email, password) {
     try {
         const model = roleArray[role];
-        // if (!model) {
-        //     throw new Error("Invalid role specified");
-        // }
-		console.log(model.findOne);
 
         return await model.findOne({
             where: {
