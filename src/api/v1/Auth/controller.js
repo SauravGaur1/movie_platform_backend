@@ -6,7 +6,7 @@ const {
 const { models } = require("../../../database/index.js");
 const { User, Admin } = models;
 
-const { createToken } = require("../../../services/jwt.js");
+const { createToken} = require("../../../services/jwt.js");
 
 module.exports = {
     signup: (req, res) => {
@@ -34,7 +34,7 @@ module.exports = {
                 }
                 // console.log(user.dataValues);
 
-                const token = await generateUserToken(user);
+                const token = await generateUserToken(user,req.body.role);
 
                 return sendSuccessResp(res, {
                     data: {
@@ -54,9 +54,10 @@ module.exports = {
     },
 };
 
-async function generateUserToken(user) {
+async function generateUserToken(user,role) {
     try {
         return await createToken({
+			role:role,
             id: user.dataValues.id,
             email: user.dataValues.email,
         });
