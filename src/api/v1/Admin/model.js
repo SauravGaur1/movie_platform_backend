@@ -26,7 +26,7 @@ Admin.init(
             limit:256,
             allowNull: false
         },
-        mobile: {
+        mobile_no: {
             type : DataTypes.STRING,
             limit:256,
             allowNull: false

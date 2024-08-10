@@ -1,7 +1,9 @@
 const Joi = require('joi');
 
 const common = {
-    id: Joi.number().required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+    role_name: Joi.string().valid('ADMIN','USER').required()
 }
 
 const loginSchema = Joi.object({
@@ -10,9 +12,7 @@ const loginSchema = Joi.object({
 
 const signupSchema = Joi.object({
     ...common,
-    username: Joi.string().optional(),
-    password: Joi.string().required(),
-    repeatPassword: Joi.string().required(),
+    name: Joi.string().required()
 });
 
 

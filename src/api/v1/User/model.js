@@ -23,30 +23,31 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
-      unique: true
+      unique: true,
     },
     mobile_no: {
       type: DataTypes.STRING,
-      unique: true
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-    }, createdAt: {
-          type: 'TIMESTAMP',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-          allowNull: false
-      },
-      updatedAt: {
-          type: 'TIMESTAMP',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-          allowNull: false
-      }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW, // Sets the default value to the current timestamp
+      onUpdate: DataTypes.NOW, // Updates the timestamp on record update
+    },
   },
 
-    {
-        timestamps: false, sequelize
-    },
+  {
+    timestamps: true,
+    sequelize,
+  },
 );
 
 module.exports = User;
