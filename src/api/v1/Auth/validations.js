@@ -1,8 +1,11 @@
 const Joi = require('joi');
 
 const common = {
-    id: Joi.number().required(),
-}
+    role: Joi.number().required(),
+    email:Joi.string().required(),
+    password:Joi.string().required(),
+};
+
 
 const loginSchema = Joi.object({
     ...common,
