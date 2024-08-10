@@ -3,10 +3,6 @@ const {
     sendFailureResp,
 } = require("../../../utils/response.js");
 
-// const {
-// 	models: { User, Admin },
-//   } = require('../../../database/index.js');
-
 const { models } = require("../../../database/index.js");
 const { User, Admin } = models;
 
@@ -21,10 +17,10 @@ module.exports = {
         // console.log(model);
         try {
             const data = await findUser(role, email, password);
-            console.log(data,"this is admin signup");
+            console.log(data, "this is admin signup");
 
             if (!data) {
-				console.log("inside if 1");
+                console.log("inside if 1");
                 const { dataValues } = await model.create({
                     name: name,
                     email: email,
@@ -69,7 +65,11 @@ module.exports = {
         await sequelize
             .sync()
             .then(async () => {
-                const { password, email, role } = req.body;
+                const { role, email, password } = req.body;
+
+                // console.log(role);
+                // console.log(email);
+                // console.log(password);
 
                 const user = await findUser(role, email, password);
 
@@ -120,6 +120,10 @@ async function generateUserToken(dataValues, role) {
 async function findUser(role, email, password) {
     try {
         const model = roleArray[role];
+        // if (!model) {
+        //     throw new Error("Invalid role specified");
+        // }
+		console.log(model.findOne);
 
         return await model.findOne({
             where: {
