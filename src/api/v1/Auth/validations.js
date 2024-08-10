@@ -3,7 +3,7 @@ const Joi = require('joi');
 const common = {
     email: Joi.string().email().required(),
     password: Joi.string().required(),
-    role_name: Joi.number().valid(0,1).required()
+    role: Joi.number().valid(0,1).required()
 }
 
 const loginSchema = Joi.object({
