@@ -1,10 +1,11 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const common = {
-    email: Joi.string().email().required(),
+    role: Joi.number().required(),
+    email: Joi.string().required(),
     password: Joi.string().required(),
-    role_name: Joi.string().valid('ADMIN','USER').required()
-}
+};
+// role_name: Joi.string().valid('ADMIN','USER').required()
 
 const loginSchema = Joi.object({
     ...common,
@@ -12,11 +13,11 @@ const loginSchema = Joi.object({
 
 const signupSchema = Joi.object({
     ...common,
-    name: Joi.string().required()
+    name: Joi.string().required(),
+    mobile:Joi.number().required(),
 });
-
 
 module.exports = {
     loginSchema,
-    signupSchema
+    signupSchema,
 };
