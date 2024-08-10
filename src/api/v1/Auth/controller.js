@@ -8,6 +8,8 @@ const { User, Admin } = models;
 
 const { createToken } = require("../../../services/jwt.js");
 
+const { hash, compareHash } = require("../../../services/encryption.js");
+
 const roleArray = [User, Admin];
 
 module.exports = {
@@ -15,14 +17,15 @@ module.exports = {
         const { role, name, mobile, email, password } = req.body;
         const model = roleArray[role];
         try {
-            const data = await findUser(role, email, password);
+            const data = await findUser(role, email);
+            const hashedPassword = await hash(password);
 
             if (!data) {
                 const { dataValues } = await model.create({
                     name: name,
                     email: email,
                     mobile: mobile,
-                    password: password,
+                    password: hashedPassword,
                 });
 
                 if (Object.keys(dataValues)?.length) {
@@ -62,12 +65,25 @@ module.exports = {
             .then(async () => {
                 const { role, email, password } = req.body;
 
-                const user = await findUser(role, email, password);
+                const user = await findUser(role, email);
 
                 if (!user) {
                     return sendFailureResp(res, {
                         data: {
                             message: "User not found",
+                        },
+                    });
+                }
+
+                const hashComparison = await compareHash(
+                    password,
+                    user?.dataValues?.password
+                );
+
+                if (!hashComparison) {
+                    return sendFailureResp(res, {
+                        data: {
+                            message: "Wrong Password",
                         },
                     });
                 }
@@ -85,7 +101,7 @@ module.exports = {
                 console.error("Unable to find User : ", error);
                 sendFailureResp(res, {
                     data: {
-                        message: error,
+                        message: "something went wrong",
                     },
                 });
             });
@@ -107,14 +123,13 @@ async function generateUserToken(dataValues, role) {
     }
 }
 
-async function findUser(role, email, password) {
+async function findUser(role, email) {
     try {
         const model = roleArray[role];
 
         return await model.findOne({
             where: {
                 email: email,
-                password: password,
             },
         });
     } catch (error) {
