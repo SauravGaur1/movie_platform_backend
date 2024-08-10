@@ -10,9 +10,8 @@ const { createToken } = require('../../../services/jwt.js');
 
 module.exports = {
   signup: async (req, res) => {
-    const roles =  [User,Admin]
     const { name, password, email, role } = req.body;
-    const model = roles[role];
+    const model = [User, Admin][role];
     try {
       const data = await model.findOne({ where: { email } });
       if (!data) {
