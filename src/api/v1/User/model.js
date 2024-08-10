@@ -25,7 +25,7 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
     },
-    mobile_no: {
+    mobile: {
       type: DataTypes.STRING,
       unique: true,
     },
