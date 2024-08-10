@@ -11,7 +11,7 @@ const { createToken } = require('../../../services/jwt.js');
 module.exports = {
   signup: async (req, res) => {
     const { name, password, email, role_name } = req.body;
-    const model = role_name == 'ADMIN' ? Admin : User;
+    const model = !!role_name ? Admin : User;
     try {
       const data = await model.findOne({ where: { email } });
       if (!data) {
