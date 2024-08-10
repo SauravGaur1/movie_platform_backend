@@ -12,48 +12,46 @@ class Admin extends Model {
 Admin.init(
     {
         id: {
-            type : DataTypes.INTEGER,
+            type: DataTypes.INTEGER,
             autoIncrement: true,
-            primaryKey:  true
+            primaryKey: true,
         },
         name: {
-            type : DataTypes.STRING,
-            limit:256,
-            allowNull: false
+            type: DataTypes.STRING,
+            limit: 256,
+            allowNull: false,
         },
         email: {
-            type : DataTypes.STRING,
-            limit:256,
-            allowNull: false
+            type: DataTypes.STRING,
+            limit: 256,
+            allowNull: false,
         },
-        mobile_no: {
-            type : DataTypes.STRING,
-            limit:256,
-            allowNull: false
+        mobile: {
+            type: DataTypes.STRING,
+            limit: 256,
+            allowNull: false,
         },
         password: {
-            type : DataTypes.STRING,
-            limit:256,
-            allowNull: false
-        }, createdAt: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-            allowNull: false
+            type: DataTypes.STRING,
+            limit: 256,
+            allowNull: false,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         },
         updatedAt: {
-            type: 'TIMESTAMP',
-            defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-            allowNull: false
-        }
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW, // Sets the default value to the current timestamp
+            onUpdate: DataTypes.NOW, // Updates the timestamp on record update
+        },
     },
 
     {
         timestamps: false,
-        sequelize
+        sequelize,
     }
-)
+);
 
 
-module.exports = Admin
-
-
+module.exports = Admin;
