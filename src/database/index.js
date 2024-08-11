@@ -73,6 +73,4 @@ Object.keys(models).forEach(modelName => {
   }
 });
 
-module.exports = { 
-  models,
-};
+module.exports = models;

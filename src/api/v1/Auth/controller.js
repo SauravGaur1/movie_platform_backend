@@ -3,8 +3,7 @@ const {
     sendFailureResp,
 } = require("../../../utils/response.js");
 
-const { models } = require("../../../database/index.js");
-const { User, Admin } = models;
+const { User, Admin } = require("../../../database/index.js");
 
 const { createToken } = require("../../../services/jwt.js");
 
