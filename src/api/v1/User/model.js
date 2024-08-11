@@ -1,7 +1,7 @@
 const { Model, DataTypes, Op } = require("sequelize");
 
 const { sequelize } = require("../../../database/database.js");
-const { hash } = require("../../../services/encryption.js");
+const { hash,compareHash } = require("../../../services/encryption.js");
 const { isEmail, isPlainObject } = require("../../../utils/validators.js");
 const { sendFailureResp } = require("../../../utils/response.js");
 
@@ -11,7 +11,7 @@ class User extends Model {
             foreignKey: "user_id",
         });
     }
-    static async findUser(email, mobile) {
+    static async findUser(email,password, mobile) {
         try {
             if (!isEmail(email)) {
                 sendFailureResp(res, {
@@ -26,6 +26,17 @@ class User extends Model {
                     [Op.or]: [{ email: email }, { mobile: mobile }],
                 },
             });
+            if (!userFound) {
+                return -1;
+            }
+            const hashComparisonIsTrue = await compareHash(
+                password,
+                userFound?.dataValues?.password
+            );
+
+            if (!hashComparisonIsTrue) {
+                return 0;
+            }
 
             return userFound;
         } catch (err) {
