@@ -18,9 +18,13 @@ module.exports = {
         const { role, name, mobile, email, password } = req.body;
 
         try {
-            const userExists = await roleArray[role].findUser(email, mobile);
+            const userExists = await roleArray[role].findUser(
+                email,
+                "",
+                mobile
+            );
 
-            if (userExists) {
+            if (userExists !== -1) {
                 return sendFailureResp(res, {
                     status: 400,
                     data: {
@@ -70,9 +74,13 @@ module.exports = {
             const { role, email, password } = req.body;
             let dummyMobile = 0;
 
-            const user = await roleArray[role].findUser(email, dummyMobile);
+            const user = await roleArray[role].findUser(
+                email,
+                password,
+                dummyMobile
+            );
 
-            if (!user) {
+            if (user === -1) {
                 return sendFailureResp(res, {
                     data: {
                         isExist: false,
@@ -80,15 +88,10 @@ module.exports = {
                     },
                 });
             }
-
-            const hashComparison = await compareHash(
-                password,
-                user?.dataValues?.password
-            );
-
-            if (!hashComparison) {
+            if (user === 0) {
                 return sendFailureResp(res, {
                     data: {
+                        isExist: false, //needs to be thought upon
                         message: "Wrong Password",
                     },
                 });
@@ -102,6 +105,7 @@ module.exports = {
             });
             return sendSuccessResp(res, {
                 data: {
+                    // isExist: true,
                     message: "valid login deatils, Access Provided",
                     token,
                 },
