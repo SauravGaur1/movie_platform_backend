@@ -1,8 +1,9 @@
 const { Model, DataTypes, Op } = require("sequelize");
 
 const { sequelize } = require("../../../database/database.js");
-const { hash,compareHash } = require("../../../services/encryption.js");
+const { hash, compareHash } = require("../../../services/encryption.js");
 const { isEmail, isPlainObject } = require("../../../utils/validators.js");
+const { toLowerCase } = require("../../../utils/sanitize.js");
 const { sendFailureResp } = require("../../../utils/response.js");
 
 class User extends Model {
@@ -11,16 +12,8 @@ class User extends Model {
             foreignKey: "user_id",
         });
     }
-    static async findUser(email,password, mobile) {
+    static async findUser(email, password, mobile) {
         try {
-            if (!isEmail(email)) {
-                sendFailureResp(res, {
-                    status: 400,
-                    data: {
-                        message: "Email is not valid",
-                    },
-                });
-            }
             const userFound = await User.findOne({
                 where: {
                     [Op.or]: [{ email: email }, { mobile: mobile }],
@@ -46,14 +39,6 @@ class User extends Model {
 
     static async createUser(name, email, password, mobile) {
         try {
-            if (!isEmail(email)) {
-                sendFailureResp(res, {
-                    status: 400,
-                    data: {
-                        message: "Email is not valid",
-                    },
-                });
-            }
             const hashedPassword = await hash(password);
 
             const user = await User.create({
