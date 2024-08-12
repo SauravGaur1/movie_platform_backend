@@ -7,103 +7,140 @@ const { User, Admin } = require("../../../database/index.js");
 
 const { createToken } = require("../../../services/jwt.js");
 
-const { hash, compareHash } = require("../../../services/encryption.js");
+const { compareHash } = require("../../../services/encryption.js");
+const { valid } = require("joi");
+const { isEmail, isPlainObject } = require("../../../utils/validators.js");
+const { toLowerCase } = require("../../../utils/sanitize.js");
 
 const roleArray = [User, Admin];
 
 module.exports = {
     signup: async (req, res) => {
         const { role, name, mobile, email, password } = req.body;
-        const model = roleArray[role];
+
+        if (!isEmail(email)) {
+            sendFailureResp(res, {
+                status: 400,
+                data: {
+                    message: "Email is not valid",
+                },
+            });
+        }
+
+        email = toLowerCase(email);
+
         try {
-            const data = await findUser(role, email);
-            const hashedPassword = await hash(password);
+            const userExists = await roleArray[role].findUser(
+                email,
+                "",
+                mobile
+            );
 
-            if (!data) {
-                const { dataValues } = await model.create({
-                    name: name,
-                    email: email,
-                    mobile: mobile,
-                    password: hashedPassword,
-                });
-
-                if (Object.keys(dataValues)?.length) {
-                    const token = await generateUserToken(dataValues, role);
-
-                    return sendSuccessResp(res, {
-                        status: 200,
-                        data: {
-                            isExist: 0,
-                            token,
-                            message: "Sign Up Successfully!",
-                        },
-                    });
-                }
-            } else {
+            if (userExists !== -1) {
                 return sendFailureResp(res, {
                     status: 400,
                     data: {
-                        isExist: 1,
+                        isExist: true,
                         message: "User already exists",
                     },
                 });
             }
+
+            const user = await roleArray[role].createUser(
+                name,
+                email,
+                password,
+                mobile
+            );
+
+            // console.log(user);
+            const token = await generateUserToken(user?.dataValues, role);
+
+            res.cookie("JWTToken", token, {
+                httpOnly: true, // Helps prevent XSS attacks
+                maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (e.g., 1 day)
+            });
+
+            return sendSuccessResp(res, {
+                status: 200,
+                data: {
+                    isExist: false,
+                    token,
+                    message: "Sign Up Successfully!",
+                },
+            });
         } catch (err) {
+            console.log(err);
             return sendFailureResp(res, {
                 status: 500,
                 data: {
                     message: "Something went wrong!",
+                    err,
                 },
             });
         }
     },
 
     login: async (req, res) => {
-        await sequelize
-            .sync()
-            .then(async () => {
-                const { role, email, password } = req.body;
+        try {
+            const { role, email, password } = req.body;
 
-                const user = await findUser(role, email);
-
-                if (!user) {
-                    return sendFailureResp(res, {
-                        data: {
-                            message: "User not found",
-                        },
-                    });
-                }
-
-                const hashComparison = await compareHash(
-                    password,
-                    user?.dataValues?.password
-                );
-
-                if (!hashComparison) {
-                    return sendFailureResp(res, {
-                        data: {
-                            message: "Wrong Password",
-                        },
-                    });
-                }
-
-                const token = await generateUserToken(user?.dataValues, role);
-
-                return sendSuccessResp(res, {
-                    data: {
-                        message: "valid login deatils, Access Provided",
-                        token,
-                    },
-                });
-            })
-            .catch((error) => {
-                console.error("Unable to find User : ", error);
+            if (!isEmail(email)) {
                 sendFailureResp(res, {
+                    status: 400,
                     data: {
-                        message: "something went wrong",
+                        message: "Email is not valid",
                     },
                 });
+            }
+
+            email = toLowerCase(email);
+
+            let dummyMobile = 0;
+
+            const user = await roleArray[role].findUser(
+                email,
+                password,
+                dummyMobile
+            );
+
+            if (user === -1) {
+                return sendFailureResp(res, {
+                    data: {
+                        isExist: false,
+                        message: "User not found",
+                    },
+                });
+            }
+            if (user === 0) {
+                return sendFailureResp(res, {
+                    data: {
+                        isExist: false, //needs to be thought upon
+                        message: "Wrong Password",
+                    },
+                });
+            }
+
+            const token = await generateUserToken(user?.dataValues, role);
+
+            res.cookie("token", token, {
+                httpOnly: true, // Helps prevent XSS attacks
+                maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (e.g., 1 day)
             });
+            return sendSuccessResp(res, {
+                data: {
+                    // isExist: true,
+                    message: "valid login deatils, Access Provided",
+                    token,
+                },
+            });
+        } catch (error) {
+            sendFailureResp(res, {
+                data: {
+                    message: "something went wrong",
+                },
+            });
+        }
     },
 };
 
@@ -119,19 +156,5 @@ async function generateUserToken(dataValues, role) {
         return await createToken(payload);
     } catch (error) {
         throw new Error("Error Generating Token:", error.message);
-    }
-}
-
-async function findUser(role, email) {
-    try {
-        const model = roleArray[role];
-
-        return await model.findOne({
-            where: {
-                email: email,
-            },
-        });
-    } catch (error) {
-        throw new Error("Error finding user: ", error.message);
     }
 }
