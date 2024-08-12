@@ -22,7 +22,7 @@ class User extends Model {
   static async findUser({ 
     email,
     password = null,
-    mobile
+    mobile = 0,
   }) {
     try {
       const userFound = await User.findOne({

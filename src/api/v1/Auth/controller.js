@@ -63,13 +63,11 @@ module.exports = {
     login: async (req, res) => {
         try {
             const { role, email, password } = req.validatedBody;
-            // let dummyMobile = 0;
 
-            const {user} = await roleMap[role].findUser(
+            const user = await roleMap[role].findUser({
                 email,
                 password,
-                // dummyMobile
-            );
+            });
 
             if (user === -1) {
                 throw new customError("User does'nt exists!",400,{isExist: true})
@@ -86,6 +84,7 @@ module.exports = {
                 httpOnly: true, 
                 maxAge: 24 * 60 * 60 * 1000,
             });
+
             return sendSuccessResp(res, {
                 data: {
                     isExist: true,

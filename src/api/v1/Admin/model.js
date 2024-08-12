@@ -9,7 +9,7 @@ class Admin extends Model {
     static async findUser({
         email,
         password = null,
-        mobile
+        mobile = 0,
     }) {
         try {
             const userFound = await Admin.findOne({
