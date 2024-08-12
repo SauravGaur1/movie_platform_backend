@@ -8,7 +8,9 @@ class JWT {
       if(!isPlainObject(payload)) throw new Error("Not a Valid Object to generate Token")
       
       return await jwt.sign(payload, jwt_secret_key);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   static async verifyToken(token) {

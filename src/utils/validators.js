@@ -43,7 +43,7 @@ class Validator {
   
     static isEmail(value) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return this.isString(value) && emailPattern.test(value);
+      return Validator.isString(value) && emailPattern.test(value);
     }
 
     static isURL(value) {
@@ -61,7 +61,7 @@ class Validator {
 
     static isUUID(value) {
       const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-      return this.isString(value) && uuidPattern.test(value);
+      return Validator.isString(value) && uuidPattern.test(value);
     }
   }
   

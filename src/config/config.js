@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-module.exports = { 
+module.exports = {
     enviornment: {
         active: "development",
         development: {
@@ -10,7 +10,7 @@ module.exports = {
         production: {
             port: 80,
             host: "0.0.0.0",
-        }
+        },
     },
     encryption: {
         salt: Number(process.env.BCRYPT_SALT),
@@ -22,7 +22,7 @@ module.exports = {
             database: process.env.DB_NAME,
             host: process.env.DB_HOST,
             port: Number(process.env.DB_PORT),
-            dialect: 'mariadb',
+            dialect: "mariadb",
             dbConnectionTimeout: Number(process.env.DB_CONNECTION_TIMEOUT),
             dbMaxConnection: Number(process.env.DB_MAX_CONNECTION),
             dbMinConnection: Number(process.env.DB_MIN_CONNECTION),
@@ -31,6 +31,14 @@ module.exports = {
         },
     },
     jsonWebToken: {
-      secretKey: process.env.JWT_SECRET,
+        secretKey: process.env.JWT_SECRET,
+        tokenMaxAge: 24 * 60 * 60 * 1000,
     },
+    getRoleMap: () => {
+        const { User, Admin } = require("../database/index.js");
+        return {
+            0: User,
+            1: Admin
+        }
+    }
 };

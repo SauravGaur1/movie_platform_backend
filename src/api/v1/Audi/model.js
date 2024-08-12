@@ -48,15 +48,14 @@ Audi.init(
       allowNull: false,
     },
     createdAt: {
-      type: 'TIMESTAMP',
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-      allowNull: false
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
     updatedAt: {
-      type: 'TIMESTAMP',
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'),
-      allowNull: false
-    }
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW, // Sets the default value to the current timestamp
+      onUpdate: DataTypes.NOW, // Updates the timestamp on record update
+    },
   },
 
     {
