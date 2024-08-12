@@ -10,12 +10,25 @@ const { createToken } = require("../../../services/jwt.js");
 
 const { compareHash } = require("../../../services/encryption.js");
 const { valid } = require("joi");
+const { isEmail, isPlainObject } = require("../../../utils/validators.js");
+const { toLowerCase } = require("../../../utils/sanitize.js");
 
 const roleArray = [User, Admin];
 
 module.exports = {
     signup: async (req, res) => {
         const { role, name, mobile, email, password } = req.body;
+
+        if (!isEmail(email)) {
+            sendFailureResp(res, {
+                status: 400,
+                data: {
+                    message: "Email is not valid",
+                },
+            });
+        }
+
+        email = toLowerCase(email);
 
         try {
             const userExists = await roleArray[role].findUser(
@@ -72,6 +85,18 @@ module.exports = {
     login: async (req, res) => {
         try {
             const { role, email, password } = req.body;
+
+            if (!isEmail(email)) {
+                sendFailureResp(res, {
+                    status: 400,
+                    data: {
+                        message: "Email is not valid",
+                    },
+                });
+            }
+
+            email = toLowerCase(email);
+
             let dummyMobile = 0;
 
             const user = await roleArray[role].findUser(
@@ -111,7 +136,6 @@ module.exports = {
                 },
             });
         } catch (error) {
-            console.error("Unable to find User : ", error);
             sendFailureResp(res, {
                 data: {
                     message: "something went wrong",
