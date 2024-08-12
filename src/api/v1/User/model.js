@@ -19,21 +19,29 @@ class User extends Model {
       foreignKey: 'user_id',
     });
   }
-  static async findUser(email, password, mobile=0) {
+  static async findUser({ 
+    email,
+    password = null,
+    mobile
+  }) {
     try {
       const userFound = await User.findOne({
         where: {
           [Op.or]: [{ email: email }, { mobile: mobile }],
         },
       });
+
       if (!userFound) {
         return -1;
       }
-      const hashComparisonIsTrue = await compareHash(
-        password,
-        userFound?.dataValues?.password,
-      );
 
+      if(!isEmpty(password)) {
+        var hashComparisonIsTrue = await compareHash(
+          password,
+          userFound?.dataValues?.password,
+        );
+      }
+      
       if (!hashComparisonIsTrue) {
         return 0;
       }
@@ -44,17 +52,19 @@ class User extends Model {
     }
   }
 
-  static async createUser(name, email, password, mobile) {
+  static async createUser({ 
+    name,
+    email,
+    password,
+    mobile 
+  }) {
     try {
-      const hashedPassword = await hash(password);
-
       const user = await User.create({
         name: name,
         email: email,
-        password: hashedPassword,
+        password: password,
         mobile: mobile,
       });
-      console.log('User created successfully');
       return user;
     } catch (err) {
       throw new customError(err.message)
@@ -92,8 +102,8 @@ User.init(
     },
     updatedAt: {
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW, // Sets the default value to the current timestamp
-      onUpdate: DataTypes.NOW, // Updates the timestamp on record update
+      defaultValue: DataTypes.NOW, 
+      onUpdate: DataTypes.NOW,
     },
   },
 
@@ -102,5 +112,10 @@ User.init(
     sequelize,
   },
 );
+
+User.beforeCreate(async (user) => {
+  user.password = await hash(user.password);
+  return user;
+})
 
 module.exports = User;

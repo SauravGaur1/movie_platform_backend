@@ -16,39 +16,29 @@ const roleMap = {
 module.exports = {
     signup: async (req, res) => {
 
-        // if (!isEmail(email)) {
-        //     sendFailureResp(res, {
-        //         status: 400,
-        //         data: {
-        //             message: "Email is not valid",
-        //         },
-        //     });
-        // }
-
         try {
             const { role, name, mobile, email, password } = req.validatedBody;
-            const userExists = await roleMap[role].findUser(
+            const userExists = await roleMap[role].findUser({
                 email,
-                "",
                 mobile
-            );
+            });
 
             if (userExists !== -1) {
-              throw new customError('User already exists!',400,{isExist: true})
+              throw new customError('User already exists!',400,{ isExist: true })
             }
 
-            const {dataValues: user} = await roleMap[role].createUser(
+            const { dataValues: user } = await roleMap[role].createUser({
                 name,
                 email,
                 password,
                 mobile
-            );
+            });
 
-            await generateUserToken(user, role);
+            const token = await generateUserToken(user, role);
 
-            const token = res.cookie("token", token, {
-                httpOnly: true, // Helps prevent XSS attacks
-                maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (e.g., 1 day)
+            res.cookie("token", token, {
+                httpOnly: true, 
+                maxAge: 24 * 60 * 60 * 1000,
             });
 
             return sendSuccessResp(res, {
@@ -61,7 +51,7 @@ module.exports = {
             });
         } catch (err) {
             return sendFailureResp(res, {
-                status: err.status,
+                status: err.statusCode,
                 data: {
                     message: err.message,
                     ...err.payload
@@ -82,7 +72,7 @@ module.exports = {
             );
 
             if (user === -1) {
-                throw new customError('User already exists!',400,{isExist: true})
+                throw new customError("User does'nt exists!",400,{isExist: true})
             }
             if (user === 0) {
                 throw new customError('Incorrect Password!', 400, {
@@ -93,8 +83,8 @@ module.exports = {
             const token = await generateUserToken(user?.dataValues, role);
 
             res.cookie("token", token, {
-                httpOnly: true, // Helps prevent XSS attacks
-                maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (e.g., 1 day)
+                httpOnly: true, 
+                maxAge: 24 * 60 * 60 * 1000,
             });
             return sendSuccessResp(res, {
                 data: {
