@@ -1,5 +1,4 @@
 require("dotenv").config();
-// require("../database/index");
 
 module.exports = {
     enviornment: {
@@ -34,8 +33,11 @@ module.exports = {
     jsonWebToken: {
         secretKey: process.env.JWT_SECRET,
     },
-    // roleMap: {
-    //     0: models.User,
-    //     1: models.Admin,
-    // },
+    getRoleMap: () => {
+        const { User, Admin } = require("../database/index.js");
+        return {
+            0: User,
+            1: Admin
+        }
+    }
 };

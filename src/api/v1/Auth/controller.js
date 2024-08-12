@@ -8,10 +8,7 @@ const { User, Admin } = require("../../../database/index.js");
 const { createToken } = require("../../../services/jwt.js");
 
 const { customError } = require('../../../utils/error');
-const roleMap = {
-  0 : User,
-  1 : Admin
-};
+const roleMap = require("../../../config/config.js").getRoleMap();
 
 module.exports = {
     signup: async (req, res) => {
