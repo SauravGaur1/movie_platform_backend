@@ -5,6 +5,7 @@ const { hash, compareHash } = require("../../../services/encryption.js");
 const { isEmail, isPlainObject } = require("../../../utils/validators.js");
 const { toLowerCase } = require("../../../utils/sanitize.js");
 const { sendFailureResp } = require("../../../utils/response.js");
+const { customError } = require("../../../utils/error.js");
 
 class Admin extends Model {
     static associate(models) {}
@@ -29,11 +30,11 @@ class Admin extends Model {
 
             return userFound;
         } catch (err) {
-            throw new Error("couldn't find user", err.message);
+            throw new customError(err.message);
         }
     }
 
-    static async createUser(name, email, password, mobile) {
+    static async createUser(name, email, password, mobile=0) {
         try {
             const hashedPassword = await hash(password);
 
@@ -46,7 +47,7 @@ class Admin extends Model {
             console.log("user created successfully");
             return user;
         } catch (err) {
-            throw new Error("Error creating user");
+            throw new customError(err.message);
         }
     }
 }

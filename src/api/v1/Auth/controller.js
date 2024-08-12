@@ -7,56 +7,46 @@ const { User, Admin } = require("../../../database/index.js");
 
 const { createToken } = require("../../../services/jwt.js");
 
-const { compareHash } = require("../../../services/encryption.js");
-const { valid } = require("joi");
-const { isEmail, isPlainObject } = require("../../../utils/validators.js");
-const { toLowerCase } = require("../../../utils/sanitize.js");
-
-const roleArray = [User, Admin];
+const { customError } = require('../../../utils/error');
+const roleMap = {
+  0 : User,
+  1 : Admin
+};
 
 module.exports = {
     signup: async (req, res) => {
-        const { role, name, mobile, email, password } = req.body;
 
-        if (!isEmail(email)) {
-            sendFailureResp(res, {
-                status: 400,
-                data: {
-                    message: "Email is not valid",
-                },
-            });
-        }
-
-        email = toLowerCase(email);
+        // if (!isEmail(email)) {
+        //     sendFailureResp(res, {
+        //         status: 400,
+        //         data: {
+        //             message: "Email is not valid",
+        //         },
+        //     });
+        // }
 
         try {
-            const userExists = await roleArray[role].findUser(
+            const { role, name, mobile, email, password } = req.validatedBody;
+            const userExists = await roleMap[role].findUser(
                 email,
                 "",
                 mobile
             );
 
             if (userExists !== -1) {
-                return sendFailureResp(res, {
-                    status: 400,
-                    data: {
-                        isExist: true,
-                        message: "User already exists",
-                    },
-                });
+              throw new customError('User already exists!',400,{isExist: true})
             }
 
-            const user = await roleArray[role].createUser(
+            const {dataValues: user} = await roleMap[role].createUser(
                 name,
                 email,
                 password,
                 mobile
             );
 
-            // console.log(user);
-            const token = await generateUserToken(user?.dataValues, role);
+            await generateUserToken(user, role);
 
-            res.cookie("JWTToken", token, {
+            const token = res.cookie("token", token, {
                 httpOnly: true, // Helps prevent XSS attacks
                 maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (e.g., 1 day)
             });
@@ -70,12 +60,11 @@ module.exports = {
                 },
             });
         } catch (err) {
-            console.log(err);
             return sendFailureResp(res, {
-                status: 500,
+                status: err.status,
                 data: {
-                    message: "Something went wrong!",
-                    err,
+                    message: err.message,
+                    ...err.payload
                 },
             });
         }
@@ -83,41 +72,21 @@ module.exports = {
 
     login: async (req, res) => {
         try {
-            const { role, email, password } = req.body;
+            const { role, email, password } = req.validatedBody;
+            // let dummyMobile = 0;
 
-            if (!isEmail(email)) {
-                sendFailureResp(res, {
-                    status: 400,
-                    data: {
-                        message: "Email is not valid",
-                    },
-                });
-            }
-
-            email = toLowerCase(email);
-
-            let dummyMobile = 0;
-
-            const user = await roleArray[role].findUser(
+            const {user} = await roleMap[role].findUser(
                 email,
                 password,
-                dummyMobile
+                // dummyMobile
             );
 
             if (user === -1) {
-                return sendFailureResp(res, {
-                    data: {
-                        isExist: false,
-                        message: "User not found",
-                    },
-                });
+                throw new customError('User already exists!',400,{isExist: true})
             }
             if (user === 0) {
-                return sendFailureResp(res, {
-                    data: {
-                        isExist: false, //needs to be thought upon
-                        message: "Wrong Password",
-                    },
+                throw new customError('Incorrect Password!', 400, {
+                  isExist: false,
                 });
             }
 
@@ -129,22 +98,24 @@ module.exports = {
             });
             return sendSuccessResp(res, {
                 data: {
-                    // isExist: true,
+                    isExist: true,
                     message: "valid login deatils, Access Provided",
                     token,
                 },
             });
-        } catch (error) {
-            sendFailureResp(res, {
-                data: {
-                    message: "something went wrong",
-                },
-            });
+        } catch (err) {
+          return sendFailureResp(res, {
+            status: err.status,
+            data: {
+              message: err.message,
+              ...err.payload,
+            },
+          });
         }
     },
 };
 
-async function generateUserToken(dataValues, role) {
+async function generateUserToken(res,dataValues, role) {
     try {
         const { id, name, email } = dataValues;
         const payload = {
@@ -155,6 +126,6 @@ async function generateUserToken(dataValues, role) {
         };
         return await createToken(payload);
     } catch (error) {
-        throw new Error("Error Generating Token:", error.message);
+        throw new customError(error.message);
     }
 }

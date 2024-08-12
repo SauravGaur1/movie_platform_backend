@@ -1,5 +1,5 @@
-class error extends Error {
-  constructor(message, statusCode = 500, payload = {}) {
+class customError extends Error {
+  constructor(message='Something went wrong', statusCode = 500, payload = {}) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;
@@ -9,5 +9,5 @@ class error extends Error {
 }
 
 module.exports = {
-  error,
+  customError,
 };

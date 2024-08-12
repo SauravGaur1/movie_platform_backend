@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const common = {
-    email: Joi.string().email().required(),
+    email: Joi.string().email().lowercase().required(),
     password: Joi.string().required(),
     role: Joi.number().valid(0, 1).required(),
 };
