@@ -21,7 +21,11 @@ module.exports = {
             });
 
             if (userExists !== -1) {
-              throw new customError('User already exists!',400,{ isExist: true })
+              throw new customError({
+                message: 'User already exists!',
+                statusCode: 400,
+                payload: { isExist: true }
+              })
             }
 
             const { dataValues: user } = await roleMap[role].createUser({
@@ -67,11 +71,19 @@ module.exports = {
             });
 
             if (user === -1) {
-                throw new customError("User does'nt exists!",400,{isExist: true})
+                throw new customError({
+                    message: "User does'nt exists!",
+                    statusCode: 400,
+                    payload: {isExist: true}
+                })
             }
             if (user === 0) {
-                throw new customError('Incorrect Password!', 400, {
-                  isExist: false,
+                throw new customError({
+                    message: 'Incorrect Password!',
+                    statusCode: 400,
+                    payload: {
+                        isExist: false,
+                    }
                 });
             }
 
@@ -112,6 +124,8 @@ async function generateUserToken(res,dataValues, role) {
         };
         return await createToken(payload);
     } catch (error) {
-        throw new customError(error.message);
+        throw new customError({
+            message: err.message
+        });
     }
 }

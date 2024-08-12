@@ -48,7 +48,9 @@ class User extends Model {
 
       return userFound;
     } catch (err) {
-      throw new customError(err.message);
+      throw new customError({
+        message: err.message
+      });
     }
   }
 
@@ -67,7 +69,9 @@ class User extends Model {
       });
       return user;
     } catch (err) {
-      throw new customError(err.message)
+      throw new customError({
+        message: err.message
+      })
     }
   }
 }
