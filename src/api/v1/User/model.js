@@ -7,10 +7,7 @@ const {
 } = require('../../../services/encryption.js');
 const {
   isEmpty,
-  isPlainObject,
 } = require('../../../utils/validators.js');
-const { toLowerCase } = require('../../../utils/sanitize.js');
-const { sendFailureResp } = require('../../../utils/response.js');
 const { customError } = require('../../../utils/error.js');
 
 class User extends Model {

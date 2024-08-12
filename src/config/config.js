@@ -32,6 +32,7 @@ module.exports = {
     },
     jsonWebToken: {
         secretKey: process.env.JWT_SECRET,
+        tokenMaxAge: 24 * 60 * 60 * 1000,
     },
     getRoleMap: () => {
         const { User, Admin } = require("../database/index.js");

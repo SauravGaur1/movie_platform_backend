@@ -3,6 +3,7 @@ const { Model, DataTypes, Op } = require("sequelize");
 const { sequelize } = require("../../../database/database.js");
 const { hash, compareHash } = require("../../../services/encryption.js");
 const { customError } = require("../../../utils/error.js");
+const { isEmpty } = require("../../../utils/validators.js");
 
 class Admin extends Model {
     static associate(_) {}
@@ -22,7 +23,7 @@ class Admin extends Model {
                 return -1;
             }
 
-            if(password) {
+            if(!isEmpty(password)) {
                 var hashComparisonIsTrue = await compareHash(
                     password,
                     userFound?.dataValues?.password

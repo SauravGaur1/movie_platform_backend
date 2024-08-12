@@ -9,6 +9,7 @@ const { createToken } = require("../../../services/jwt.js");
 
 const { customError } = require('../../../utils/error');
 const roleMap = require("../../../config/config.js").getRoleMap();
+const tokenMaxAge = require("../../../config/config.js").jsonWebToken.tokenMaxAge;
 
 module.exports = {
     signup: async (req, res) => {
@@ -39,7 +40,7 @@ module.exports = {
 
             res.cookie("token", token, {
                 httpOnly: true, 
-                maxAge: 24 * 60 * 60 * 1000,
+                maxAge: tokenMaxAge,
             });
 
             return sendSuccessResp(res, {
@@ -74,7 +75,9 @@ module.exports = {
                 throw new customError({
                     message: "User does'nt exists!",
                     statusCode: 400,
-                    payload: {isExist: true}
+                    payload: { 
+                        isExist: true 
+                    }
                 })
             }
             if (user === 0) {
@@ -91,7 +94,7 @@ module.exports = {
 
             res.cookie("token", token, {
                 httpOnly: true, 
-                maxAge: 24 * 60 * 60 * 1000,
+                maxAge: tokenMaxAge,
             });
 
             return sendSuccessResp(res, {
@@ -101,6 +104,7 @@ module.exports = {
                     token,
                 },
             });
+
         } catch (err) {
           return sendFailureResp(res, {
             status: err.status,
@@ -113,7 +117,7 @@ module.exports = {
     },
 };
 
-async function generateUserToken(res,dataValues, role) {
+async function generateUserToken(dataValues, role) {
     try {
         const { id, name, email } = dataValues;
         const payload = {
