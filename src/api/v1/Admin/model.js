@@ -3,20 +3,13 @@ const { Model, DataTypes, Op } = require("sequelize");
 const { sequelize } = require("../../../database/database.js");
 const { hash, compareHash } = require("../../../services/encryption.js");
 const { isEmail, isPlainObject } = require("../../../utils/validators.js");
+const { toLowerCase } = require("../../../utils/sanitize.js");
 const { sendFailureResp } = require("../../../utils/response.js");
 
 class Admin extends Model {
     static associate(models) {}
     static async findUser(email, password, mobile) {
         try {
-            if (!isEmail(email)) {
-                sendFailureResp(res, {
-                    status: 400,
-                    data: {
-                        message: "Email is not valid",
-                    },
-                });
-            }
             const userFound = await Admin.findOne({
                 where: {
                     [Op.or]: [{ email: email }, { mobile: mobile }],
@@ -42,14 +35,6 @@ class Admin extends Model {
 
     static async createUser(name, email, password, mobile) {
         try {
-            if (!isEmail(email)) {
-                sendFailureResp(res, {
-                    status: 400,
-                    data: {
-                        message: "Email is not valid",
-                    },
-                });
-            }
             const hashedPassword = await hash(password);
 
             const user = await Admin.create({
@@ -110,9 +95,5 @@ Admin.init(
         sequelize,
     }
 );
-
-// async function findUser(role, email) {
-//
-// }
 
 module.exports = Admin;
