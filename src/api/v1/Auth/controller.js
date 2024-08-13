@@ -107,7 +107,7 @@ module.exports = {
 
         } catch (err) {
           return sendFailureResp(res, {
-            status: err.status,
+            status: err.statusCode,
             data: {
               message: err.message,
               ...err.payload,
