@@ -1,6 +1,8 @@
 const config = require('./config/config.js');
 const app  = require('./app.js');
 require('./database/index.js');
+require("./services/aws_s3.js");
+
 
 const enviornment = config.enviornment.active === "production"
         ? config.enviornment.production 
