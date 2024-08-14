@@ -75,11 +75,6 @@ const filePath = path.resolve("public/dice.jpg");
 // console.log(filePath);
 const keyName = "dice.jpg"; // The name you want to save the file as
 
-// s3Service
-//     .uploadFile(filePath, keyName)
-//     .then((location) => console.log(`File available at: ${location}`))
-//     .catch((error) => console.error(error.message));
-// return;
 
 (async () => {
     try {
