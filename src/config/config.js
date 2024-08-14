@@ -38,7 +38,15 @@ module.exports = {
         const { User, Admin } = require("../database/index.js");
         return {
             0: User,
-            1: Admin
-        }
-    }
+            1: Admin,
+        };
+    },
+    aws: {
+        bucketName: process.env.AWS_BUCKET_NAME,
+        region: process.env.AWS_REGION,
+        credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretKeyAccess: process.env.AWS_SECRET_KEY_ACCESS,
+        },
+    },
 };
