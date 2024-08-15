@@ -13,13 +13,44 @@ class State extends Model {
 State.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.MEDIUMINT,
             autoIncrement: true,
             primaryKey: true,
         },
-        title: {
+        name: {
             type: DataTypes.STRING,
             limit: 256,
+            allowNull: false,
+        },
+        country_id : {
+            type: DataTypes.MEDIUMINT,
+            allowNull: false,
+        },
+        country_code : {
+            type: DataTypes.CHAR,
+            limit: 2,
+            allowNull: false,
+        },
+        fips_code : {
+            type: DataTypes.STRING,
+            limit: 256,
+        },
+        iso2 : {
+            type: DataTypes.STRING,
+            limit: 256,
+            allowNull: false,
+        },
+        type : {
+            type: DataTypes.STRING,
+            limit: 256,
+            allowNull: false,
+        },
+        latitude : {
+            type: DataTypes.DECIMAL,
+            allowNull: false,
+        },
+        longitude : {
+            type: DataTypes.DECIMAL,
             allowNull: false,
         },
         createdAt: {
