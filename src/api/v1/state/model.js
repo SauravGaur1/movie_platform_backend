@@ -46,18 +46,18 @@ State.init(
             allowNull: false,
         },
         latitude : {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(10,8),
             allowNull: false,
         },
         longitude : {
-            type: DataTypes.DECIMAL,
+            type: DataTypes.DECIMAL(10,8),
             allowNull: false,
         },
-        createdAt: {
+        created_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
-        updatedAt: {
+        updated_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW, // Sets the default value to the current timestamp
             onUpdate: DataTypes.NOW, // Updates the timestamp on record update
