@@ -8,6 +8,14 @@ class State extends Model {
             foreignKey: "state_id",
         });
     }
+
+     static async getAllStates() {
+         return await State.findAll({
+            attributes:['id','name'],
+             order: [['name']]
+             },
+         );
+     }
 }
 
 State.init(
