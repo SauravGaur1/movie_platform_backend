@@ -19,10 +19,10 @@
 -- Table structure for table `states`
 --
 
-DROP TABLE IF EXISTS `states`;
+DROP TABLE IF EXISTS `States`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `states` (
+CREATE TABLE `States` (
   `id` mediumint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `country_id` mediumint unsigned NOT NULL,

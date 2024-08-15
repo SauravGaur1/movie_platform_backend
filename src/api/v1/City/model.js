@@ -21,19 +21,42 @@ City.init(
             autoIncrement: true,
             primaryKey: true,
         },
-        state_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        title: {
+        name: {
             type: DataTypes.STRING,
+            limit: 256,
             allowNull: false,
         },
-        createdAt: {
+        state_id : {
+            type: DataTypes.MEDIUMINT,
+            allowNull: false,
+        },
+        state_code : {
+            type: DataTypes.CHAR,
+            limit: 2,
+            allowNull: false,
+        },
+        country_id : {
+            type: DataTypes.MEDIUMINT,
+            allowNull: false,
+        },
+        country_code : {
+            type: DataTypes.CHAR,
+            limit: 2,
+            allowNull: false,
+        },
+        latitude : {
+            type: DataTypes.DECIMAL(10,8),
+            allowNull: false,
+        },
+        longitude : {
+            type: DataTypes.DECIMAL(10,8),
+            allowNull: false,
+        },
+        created_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
         },
-        updatedAt: {
+        updated_at: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW, // Sets the default value to the current timestamp
             onUpdate: DataTypes.NOW, // Updates the timestamp on record update
