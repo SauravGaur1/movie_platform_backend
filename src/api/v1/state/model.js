@@ -10,11 +10,23 @@ class State extends Model {
     }
 
      static async getAllStates() {
-         return await State.findAll({
-            attributes:['id','name'],
-             order: [['name']]
-             },
-         );
+
+        return  new Promise(async function (data, err) {
+
+            try {
+                let states = await State.findAll(
+                    {
+                        attributes: ['id', 'name'],
+                        order: [['name']]
+                    },
+                );
+                data(states);
+            } catch (e) {
+                err("Not able to fetch states");
+            }
+
+        });
+
      }
 }
 
