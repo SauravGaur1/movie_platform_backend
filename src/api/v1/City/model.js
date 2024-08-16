@@ -1,6 +1,7 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes, where} = require("sequelize");
 
 const { sequelize } = require("../../../database/database.js");
+const {Op} = require("sequelize");
 
 class City extends Model {
     static associate(models) {
@@ -11,6 +12,25 @@ class City extends Model {
         City.hasMany(models.Theaters, {
             foreignKey: "city_id",
         });
+    }
+
+    static async getCitiesByStateId(state_id) {
+        try {
+            const cities = await City.findAll(
+                {
+                    attributes:[ "id" , "name" ],
+                    where: {
+                        state_id :  {
+                            [Op.eq]: state_id
+                        }
+                    }
+                }
+            );
+
+            return cities;
+        } catch (e) {
+            throw e;
+        }
     }
 }
 
