@@ -26,6 +26,8 @@ class State extends Model {
                 message: "Not able to fetch states",
             })
 
+            return states;
+
         } catch (e) {
             throw e;
         }
