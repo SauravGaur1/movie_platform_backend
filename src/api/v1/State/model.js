@@ -1,6 +1,8 @@
 const { Model, DataTypes } = require("sequelize");
 
 const { sequelize } = require("../../../database/database.js");
+const { isEmpty } = require("../../../utils/validators.js");
+const { customError } = require("../../../utils/error.js");
 
 class State extends Model {
     static associate(models) {
@@ -11,21 +13,22 @@ class State extends Model {
 
      static async getAllStates() {
 
-        return  new Promise(async function (data, err) {
+        try {
+            const states = await State.findAll(
+                {
+                    attributes: ['id', 'name'],
+                    order: [['name']]
+                },
+            );
 
-            try {
-                let states = await State.findAll(
-                    {
-                        attributes: ['id', 'name'],
-                        order: [['name']]
-                    },
-                );
-                data(states);
-            } catch (e) {
-                err("Not able to fetch states");
-            }
+            if(isEmpty(states)) throw customError({
+                statusCode: 200,
+                message: "Not able to fetch states",
+            })
 
-        });
+        } catch (e) {
+            throw e;
+        }
 
      }
 }
