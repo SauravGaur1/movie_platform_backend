@@ -21,7 +21,7 @@ class State extends Model {
                 },
             );
 
-            if(isEmpty(states)) throw customError({
+            if(isEmpty(states)) throw new customError({
                 statusCode: 200,
                 message: "Not able to fetch states",
             })
