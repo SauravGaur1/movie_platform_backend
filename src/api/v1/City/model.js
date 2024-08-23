@@ -57,6 +57,28 @@ class City extends Model {
             throw e;
         }
     }
+
+    static async searchCities(query) {
+        try {
+            const cities = await City.findAll(
+                {
+                    attributes:[ "id" , "name", ],
+                    order: [
+                        ["name"]
+                    ],
+                    where: {
+                        name :  {
+                            [Op.like]: `%${query}%`
+                        }
+                    }
+                }
+            );
+
+            return cities;
+        } catch (e) {
+            throw e;
+        }
+    }
 }
 
 City.init(
