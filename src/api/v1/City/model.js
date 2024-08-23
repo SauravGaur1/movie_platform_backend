@@ -19,9 +19,34 @@ class City extends Model {
             const cities = await City.findAll(
                 {
                     attributes:[ "id" , "name" ],
+                    order: [
+                        ["name"]
+                    ],
                     where: {
                         state_id :  {
                             [Op.eq]: state_id
+                        }
+                    }
+                }
+            );
+
+            return cities;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    static async getPopularCities() {
+        try {
+            const cities = await City.findAll(
+                {
+                    attributes:[ "id" , "name", ],
+                    order: [
+                        ["name"]
+                    ],
+                    where: {
+                        is_popular :  {
+                            [Op.eq]: true
                         }
                     }
                 }
@@ -71,6 +96,10 @@ City.init(
         longitude : {
             type: DataTypes.DECIMAL(10,8),
             allowNull: false,
+        },
+        is_popular : {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
         created_at: {
             type: DataTypes.DATE,
