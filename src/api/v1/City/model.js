@@ -60,6 +60,10 @@ class City extends Model {
                         }
                     }
                 );
+                await redisClient.set({
+                    key: "cities:popular",
+                    value: JSON.stringify(cities),
+                })
             } else {
                 cities = JSON.parse(cities);
             }
