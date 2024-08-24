@@ -2,6 +2,8 @@ const { Model, DataTypes, where} = require("sequelize");
 
 const { sequelize } = require("../../../database/database.js");
 const { Op } = require("sequelize");
+const redisClient = require("../../../services/redis.js");
+const { isEmpty } = require("../../../utils/validators.js");
 
 class City extends Model {
     static associate(models) {
@@ -37,22 +39,33 @@ class City extends Model {
     }
 
     static async getPopularCities() {
+        
         try {
-            const cities = await City.findAll(
-                {
-                    attributes:[ "id" , "name", ],
-                    order: [
-                        ["name"]
-                    ],
-                    where: {
-                        is_popular :  {
-                            [Op.eq]: true
+
+            let cities = await redisClient.get({
+                key: "cities:popular"
+            });
+
+            if(isEmpty(cities)) {
+                cities = await City.findAll(
+                    {
+                        attributes:[ "id" , "name", ],
+                        order: [
+                            ["name"]
+                        ],
+                        where: {
+                            is_popular :  {
+                                [Op.eq]: true
+                            }
                         }
                     }
-                }
-            );
+                );
+            } else {
+                cities = JSON.parse(cities);
+            }
 
             return cities;
+
         } catch (e) {
             throw e;
         }
