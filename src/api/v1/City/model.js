@@ -1,7 +1,7 @@
 const { Model, DataTypes, where} = require("sequelize");
 
 const { sequelize } = require("../../../database/database.js");
-const {Op} = require("sequelize");
+const { Op } = require("sequelize");
 
 class City extends Model {
     static associate(models) {

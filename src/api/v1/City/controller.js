@@ -1,9 +1,10 @@
 const { sendSuccessResp, sendFailureResp } = require('../../../utils/response.js');
 
 const { City} = require('../../../database/index.js');
-const {isEmpty} = require('../../../utils/validators.js')
-const {customError} = require("../../../utils/error");
+const { isEmpty } = require('../../../utils/validators.js')
+const { customError } = require("../../../utils/error");
 cityController = {
+
     getPopularCities :  async (req, res) => {
 
         try {
@@ -31,7 +32,7 @@ cityController = {
     },
     getCitiesByStateId : async (req,res) => {
         try {
-            let state_id = req.query.state_id;
+            let { state_id } = req.query;
 
             if(isEmpty(state_id)) {
                 throw new  customError({
@@ -65,13 +66,13 @@ cityController = {
     searchCity :  async (req, res) => {
 
         try {
-            let query = req.query.q;
+            let { q : query } = req.query;
 
             if(isEmpty(query)) {
-                throw new  customError({
+                throw new customError({
                     statusCode: 200,
-                    message : "Invalid Search Query"}
-                );
+                    message : "Invalid Search Query"
+                });
             }
 
             const cities = await City.searchCities(query);
@@ -96,7 +97,6 @@ cityController = {
             )
         }
     },
-
 
 }
 
