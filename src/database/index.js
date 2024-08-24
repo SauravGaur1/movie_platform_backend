@@ -29,7 +29,8 @@ const {
   Show,
   Transaction,
   User,
-  Ticket
+  Ticket,
+  Seat
 } = models;
 
 let tableSyncSequence = [
@@ -46,7 +47,8 @@ let tableSyncSequence = [
   Show,
   Transaction,
   User,
-  Ticket
+  Ticket,
+  Seat
 ]
 
 tableSyncSequenceFunction = tableSyncSequence.map((model) => {

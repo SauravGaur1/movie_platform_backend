@@ -1,4 +1,6 @@
 require("dotenv").config();
+const configHandler = require('../utils/configHandler');
+const config = new configHandler()
 
 module.exports = {
     enviornment: {
@@ -40,5 +42,7 @@ module.exports = {
             0: User,
             1: Admin
         }
-    }
+    },
+    seatCodes: config.getConfig("seatCodes"),
+    config
 };
