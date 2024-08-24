@@ -29,15 +29,49 @@ cityController = {
             )
         }
     },
+    getCitiesByStateId : async (req,res) => {
+        try {
+            let state_id = req.query.state_id;
+
+            if(isEmpty(state_id)) {
+                throw new  customError({
+                    statusCode: 200,
+                    message : "Invalid State"
+                });
+            }
+
+            const cities = await City.getCitiesByStateId(state_id);
+            sendSuccessResp(
+                res,
+                {
+                    status: 200,
+                    data: {
+                        cities : cities
+                    }
+                }
+            )
+        } catch (err) {
+            sendFailureResp(
+                res,
+                {
+                    status : err.statusCode,
+                    data: {
+                        message: err.message,
+                    }
+                }
+            )
+        }
+    },
     searchCity :  async (req, res) => {
 
         try {
             let query = req.query.q;
 
             if(isEmpty(query)) {
-               throw  customError({
-                   statusCode: 200,
-                    message : "Invalid Search Query"});
+                throw new  customError({
+                    statusCode: 200,
+                    message : "Invalid Search Query"}
+                );
             }
 
             const cities = await City.searchCities(query);
@@ -62,6 +96,8 @@ cityController = {
             )
         }
     },
+
+
 }
 
 module.exports = cityController;
