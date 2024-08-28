@@ -1,33 +1,58 @@
 const {
     sendSuccessResp,
-    sendfailureResp,
+    sendFailureResp,
 } = require("../../../utils/response.js");
 
 const { listFiles, downloadFile } = require("../../../services/aws_s3.js");
 const { customError } = require("../../../utils/error.js");
 const { Movie } = require("../../../database/index.js");
+const { isEmpty } = require("../../../utils/validators.js");
 
 module.exports = {
-    add: async (req, res) => {
-        const { title } = req.body;
-        const movieExists = await Movie.findMovie(title);
-        console.log(movieExists);
+    add: async (req, res, next) => {
+        try {
+            // if verified, Authenticate middleware will have added a new User prop to request
+            if (!isEmpty(req.User) && req.User.role < 1) {
+                throw new customError({
+                    message: "User not Allowed on this Path!",
+                    statusCode: 401,
+                });
+            }
+            const { title } = req.body;
+            const movieExists = await Movie.findMovie(title);
+            // console.log(movieExists);
 
-        if (movieExists) {
-            throw new customError({
-                message: "Movie already Exists!",
-                statusCode: 400,
-                payload: { isExist: true },
+            if (movieExists) {
+                throw new customError({
+                    message: "Movie already Exists!",
+                    statusCode: 409,
+                    payload: {
+                        isExist: true,
+                        movieDetails: movieExists?.dataValues,
+                    },
+                });
+            }
+            const createdMovie = await Movie.createMovie(req.body);
+            if (createdMovie) {
+                console.log("movie created");
+            }
+            sendSuccessResp(res, {
+                status: 200,
+                data: {
+                    isExist: false,
+                    message: "New Movie Added Successfully!",
+                    movieDetails: createdMovie?.dataValues,
+                },
+            });
+        } catch (error) {
+            return sendFailureResp(res, {
+                status: error.statusCode,
+                data: {
+                    message: error.message,
+                    ...error.payload,
+                },
             });
         }
-        const createdMovie=await Movie.createMovie(req.body);
-        if(createdMovie){
-            console.log("movie created");
-        }
-        // if(movieExists){
-        // }
-
-        // const createdMovie=await
     },
     files: async (req, res) => {
         const movieNumber = 101;
