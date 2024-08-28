@@ -15,7 +15,7 @@ const BUCKET_NAME = awsConfig.bucketName;
 
 class S3Service {
     // Static method to upload a file to S3
-    static async uploadFile(filePath, key) {
+    static async uploadFile(filePath, key, contentType) {
         // Read the file content from the filePath
         if (!fs.existsSync(filePath)) {
             throw new customError("File not found", 400);
@@ -25,7 +25,7 @@ class S3Service {
             Bucket: BUCKET_NAME,
             Key: key, // File name you want to save as in S3
             Body: fileContent,
-            ContentType: "image/jpeg",
+            ContentType: contentType,
         };
 
         try {
@@ -43,8 +43,8 @@ class S3Service {
         };
 
         try {
-            const data = await s3.getObject(params).promise();
-            return data.Body; // Return the file data
+            const data =  s3.getObject(params).createReadStream();
+            return data; // Return the file data
         } catch (error) {
             throw new customError(`Failed to download file:`, 500, error);
         }
@@ -64,36 +64,72 @@ class S3Service {
     //         throw new customError(`Failed to delete file:`, 500, error);
     //     }
     // }
+
+    static async listFiles(prefix) {
+        const params = {
+            Bucket: BUCKET_NAME,
+            Prefix: prefix,
+        };
+
+        try {
+            const data = await s3.listObjectsV2(params).promise();
+
+            // console.log("data: ",data);
+            return data?.Contents?.map((item) => item.Key); //return list of items
+        } catch (error) {
+            throw new customError("Failed to list files", 500, error);
+        }
+    }
+    static async uploadMultiple() {}
 }
 
 module.exports = {
     uploadFile: S3Service.uploadFile,
     downloadFile: S3Service.downloadFile,
+    listFiles: S3Service.listFiles,
 };
 
 const filePath = path.resolve("public/dice.jpg");
 // console.log(filePath);
-const keyName = "dice.jpg"; // The name you want to save the file as
+// const keyName = "movie/thumbnail2/dice2.jpg"; // The name you want to save the file as
+const keyName = "movie/101/thumbnail/dice3.jpg"; // The name you want to save the file as
+const movieNumber = 101;
+const fileCategory = "thumbnail";
 
+//----------------To Download a File----------------
+// (async () => {
+//     try {
+//         const prefix = `movie/${movieNumber}/${fileCategory}`;
+//         const files = await S3Service.listFiles(prefix);
 
-(async () => {
-    try {
-        // console.log(filePath);
-        // const uploadedFileURL = await S3Service.uploadFile(filePath, keyName);
-        // console.log(`File uploaded at:${uploadedFileURL}`);
+//         console.log(files);
 
-        const downloadedFile = await S3Service.downloadFile(keyName);
-        const downloadDir = path.resolve("public/download");
-        
-        if (!fs.existsSync(downloadDir)) {
-            fs.mkdirSync(downloadDir, { recursive: true });
-        }
-        const outputFilePath=path.join(downloadDir,keyName);
+//         for (const key of files) {
+//             const downloadedFile = await S3Service.downloadFile(key);
+//             const downloadDir = path.resolve(
+//                 `public/${movieNumber}/${fileCategory}/`
+//             );
 
-        fs.writeFileSync(outputFilePath, downloadedFile);
+//             if (!fs.existsSync(downloadDir)) {
+//                 fs.mkdirSync(downloadDir, { recursive: true });
+//             }
+//             const outputFilePath = path.join(downloadDir, path.basename(key));
+//             fs.writeFileSync(outputFilePath, downloadedFile);
+//         }
+//     } catch (error) {
+//         console.error(`Error downloading file: ${error.message}`);
+//     }
+// })();
 
-        // console.log("downloaded File and saved at: ",outputFilePath ); // Handle the downloaded file data as needed
-    } catch (error) {
-        console.error(`Error downloading file: ${error.message}`);
-    }
-})();
+//----------------To Upload a File----------------
+// (async () => {
+//     try {
+//         console.log(filePath);
+//         const uploadedFileURL = await S3Service.uploadFile(filePath, keyName,"image/png");
+//         console.log(`File uploaded at:${uploadedFileURL}`);
+
+//         // console.log("downloaded File and saved at: ",outputFilePath ); // Handle the downloaded file data as needed
+//     } catch (error) {
+//         console.error(`Error downloading file: ${error.message}`);
+//     }
+// })();
