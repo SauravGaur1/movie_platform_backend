@@ -73,6 +73,16 @@ class Sanitize {
       }
       return Sanitize.trim(value.split(' ')[1]);
     }
+
+    static getObjectKeys(obj={}){
+      console.log(obj)
+      return Object.keys(obj).map((data) => isNaN(data) ? data : Number(data))
+    }
+
+    static getObjectValues(obj={}){
+      console.log(obj)
+      return Object.values(obj)
+    }
   }
 
 module.exports = {
@@ -85,5 +95,7 @@ module.exports = {
     sanitizeObject: Sanitize.sanitizeObject,
     toUnixPath: Sanitize.toUnixPath,
     sanitizeToken: Sanitize.sanitizeToken, 
+    getObjectKeys: Sanitize.getObjectKeys,
+    getObjectValues: Sanitize.getObjectValues
 };
   

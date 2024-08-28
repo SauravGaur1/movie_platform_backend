@@ -18,28 +18,28 @@ const {
   updateAudi,
 } = require('./controller');
 
-router.get('/get-audi-by-id', [
+router.post('/create', [
+  // authenticate(),
+  validate(createSchema),
+  createAudi,
+]);
+
+router.patch('/update', [
+  authenticate(),
+  validate(updateSchema),
+  updateAudi,
+]);
+
+router.get('/?audi_id', [
   authenticate(),
   validate(audiSchema),
   getAudiById,
 ]);
 
-router.get('/get-audi-by-theatre-id', [
+router.get('/?theatre_id', [
   authenticate(),
   validate(audiListSchema),
   getAudiListByTheatreId,
-]);
-
-router.post('/create-audi', [
-  authenticate(),
-  validate(createSchema),
-  createAudi,
-]);
-
-router.patch('/update-audi', [
-  authenticate(),
-  validate(updateSchema),
-  updateAudi,
 ]);
 
 module.exports = router

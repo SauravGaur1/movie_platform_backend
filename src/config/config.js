@@ -1,7 +1,6 @@
 require("dotenv").config();
-const configHandler = require('../utils/configHandler');
-const config = new configHandler()
-
+const config = require('../utils/configHandler');
+console.log(config)
 module.exports = {
     enviornment: {
         active: "development",
@@ -43,6 +42,8 @@ module.exports = {
             1: Admin
         }
     },
-    seatCodes: config.getConfig("seatCodes"),
-    config
+    getSeatCodes: ()=>{
+        console.log("configgg....",config)
+        return config.getConfig("seatCodes")},
+    getAudiType: ()=>{return config.getConfig("audiType")},
 };

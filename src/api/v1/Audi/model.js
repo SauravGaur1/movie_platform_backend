@@ -4,18 +4,18 @@ const { sequelize } = require('../../../database/database.js');
 
 class Audi extends Model {
   static associate(models) {
-   
+
     Audi.belongsTo(models.AudiType, {
-      foreignKey: 'type', 
-      
+      foreignKey: 'type',
+
     });
 
     Audi.belongsTo(models.Theaters, {
       foreignKey: 'theater_id',
     });
 
-    Audi.hasMany(models.Show,{
-      foreignKey:'audi_id'
+    Audi.hasMany(models.Show, {
+      foreignKey: 'audi_id'
     });
   }
 }
@@ -57,10 +57,9 @@ Audi.init(
       onUpdate: DataTypes.NOW, // Updates the timestamp on record update
     },
   },
-
-    {
-        timestamps: false, sequelize
-    },
+  {
+    timestamps: false, sequelize
+  },
 );
 
 module.exports = Audi;

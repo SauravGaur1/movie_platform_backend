@@ -75,4 +75,15 @@ Object.keys(models).forEach(modelName => {
   }
 });
 
+Object.keys(models).forEach(async(modelName) => {
+  try {
+    if (models[modelName].setConfigData) {
+      const data = await models[modelName].setConfigData()
+      console.log(data)
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
 module.exports = models;

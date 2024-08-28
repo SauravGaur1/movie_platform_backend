@@ -2,7 +2,7 @@ const { DataTypes, Model, Op } = require('sequelize');
 const { sequelize } = require('../../../database/database');
 const { isEmpty } = require('../../../utils/validators');
 const { customError } = require('../../../utils/error');
-const { config } = require('../../../config/config');
+const  config  = require('../../../utils/configHandler');
 
 class Seat extends Model {
 
@@ -43,6 +43,16 @@ class Seat extends Model {
     }
   }
 
+  static async setConfigData() {
+    const data = await Seat.findAll();
+    const seatMap = data?.reduce((acc, { dataValues: { seat_code, category } }) => {
+      return { ...acc, [seat_code]: category };
+    },
+      {},
+    );
+    config.setConfig({ key: 'seatCodes', value: seatMap });
+  }
+
 }
 
 Seat.init(
@@ -78,15 +88,8 @@ Seat.init(
   },
 );
 
-Seat.afterSave(async () => {
-  const data = await Seat.findAll();
-  const seatMap = data?.reduce(
-    (acc, { dataValues: { seat_code, category } }) => {
-      return { ...acc, [seat_code]: category };
-    },
-    {},
-  );
-  return config.setConfig({ key: 'seatCodes', value: seatMap });
+Seat.afterSave(async()=>{
+  this.setConfigData()
 });
 
 module.exports = Seat;

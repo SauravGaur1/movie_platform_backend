@@ -1,10 +1,10 @@
 const { sendSuccessResp } = require('../../../utils/response');
 const { Seat } = require('../../../database/index');
-const asyncHandler = require('../../../utils/asyncHandler');
+const tryCatchWrapper = require('../../../utils/tryCatchWrapper');
 const { customError } = require('../../../utils/error');
 
 module.exports = {
-  create: asyncHandler(async (req, res) => {
+  create: tryCatchWrapper(async (req, res) => {
     const { category, seat_code } = req.validatedBody;
     const { dataValues: seat, isNewRecord } = await Seat.createSeat({
       category,
@@ -27,7 +27,7 @@ module.exports = {
     });
   }),
 
-  update: asyncHandler(async (req, res) => {
+  update: tryCatchWrapper(async (req, res) => {
     const { category, seat_code, id } = req.validatedBody;
     const rowCount = await Seat.updateSeat({
       id,

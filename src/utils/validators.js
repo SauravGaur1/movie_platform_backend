@@ -63,6 +63,19 @@ class Validator {
       const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       return Validator.isString(value) && uuidPattern.test(value);
     }
+
+    static validateNoOfSeats = (value, helpers) => {
+      const { layout } = helpers.state.ancestors[0]
+      const values = layout.flat()
+      const count = values.reduce((acc, seat) => {
+        return !!seat ? ++acc : acc
+      }, 0)
+
+      if (count != value) {
+        return helpers.error('any.invalid');
+      }
+      return value
+    }
   }
   
   module.exports = {
@@ -75,6 +88,7 @@ class Validator {
     isEmail: Validator.isEmail,
     isURL: Validator.isURL,
     isDate: Validator.isDate,
-    isUUID: Validator.isUUID
+    isUUID: Validator.isUUID,
+    isValidNoOfSeats: Validator.validateNoOfSeats
   };
   

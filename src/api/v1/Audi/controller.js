@@ -1,20 +1,20 @@
 const {
     sendSuccessResp,
-    sendFailureResp
 } = require('../../../utils/response')
+const tryCatchWrapper = require('../../../utils/tryCatchWrapper')
 
 
 module.exports = {
-    getAudiById : async(req,res)=>{
-        
-    },
-    getAudiListByTheatreId : async(req,res)=>{
+    createAudi: tryCatchWrapper((async (req, res) => {
+        res.send("Chal gya 🥱")
+    })),
+    updateAudi: tryCatchWrapper((async (req, res) => {
 
-    },
-    createAudi : async(req,res)=>{
+    })),
+    getAudiById : tryCatchWrapper((async(req,res)=>{
 
-    },
-    updateAudi : async(req,res)=>{
+    })),
+    getAudiListByTheatreId: tryCatchWrapper((async (req, res) => {
 
-    }
+    }))
 }
