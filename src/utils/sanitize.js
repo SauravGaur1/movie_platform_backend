@@ -1,3 +1,4 @@
+const { isEmpty } = require("./validators");
 class Sanitize {
 
     static trim(value) {
@@ -64,6 +65,12 @@ class Sanitize {
       }
       return obj;
     }
+    static sanitizeToken(value){
+      if(isEmpty(value)){
+        return '' 
+      }
+      return Sanitize.trim(value.split(' ')[1]);
+    }
   }
 
 module.exports = {
@@ -75,5 +82,6 @@ module.exports = {
     sanitizeArray: Sanitize.sanitizeArray,
     sanitizeObject: Sanitize.sanitizeObject,
     toUnixPath: Sanitize.toUnixPath,
+    sanitizeToken: Sanitize.sanitizeToken, 
 };
   
