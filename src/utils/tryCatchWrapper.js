@@ -1,8 +1,9 @@
 const { sendFailureResp } = require("./response")
 
-const asyncHandler = (controller) => {
+const tryCatchWrapper = (controller) => {
     return async (req, res, next) => {
         try {
+            console.log("asjfkhahkh")
             return await controller(req, res, next)
         } catch (err) {
             return sendFailureResp(res, {
@@ -16,4 +17,4 @@ const asyncHandler = (controller) => {
     }
 }
 
-module.exports = asyncHandler
+module.exports = tryCatchWrapper

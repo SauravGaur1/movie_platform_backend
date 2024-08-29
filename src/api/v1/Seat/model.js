@@ -78,15 +78,4 @@ Seat.init(
   },
 );
 
-Seat.afterSave(async () => {
-  const data = await Seat.findAll();
-  const seatMap = data?.reduce(
-    (acc, { dataValues: { seat_code, category } }) => {
-      return { ...acc, [seat_code]: category };
-    },
-    {},
-  );
-  return config.setConfig({ key: 'seatCodes', value: seatMap });
-});
-
 module.exports = Seat;

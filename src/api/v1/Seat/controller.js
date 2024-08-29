@@ -1,10 +1,11 @@
 const { sendSuccessResp } = require('../../../utils/response');
 const { Seat } = require('../../../database/index');
-const asyncHandler = require('../../../utils/asyncHandler');
+const tryCatchWrapper = require('../../../utils/tryCatchWrapper');
 const { customError } = require('../../../utils/error');
+const { isEmpty } = require('../../../utils/validators');
 
 module.exports = {
-  create: asyncHandler(async (req, res) => {
+  create: tryCatchWrapper(async (req, res) => {
     const { category, seat_code } = req.validatedBody;
     const { dataValues: seat, isNewRecord } = await Seat.createSeat({
       category,
@@ -27,7 +28,7 @@ module.exports = {
     });
   }),
 
-  update: asyncHandler(async (req, res) => {
+  update: tryCatchWrapper(async (req, res) => {
     const { category, seat_code, id } = req.validatedBody;
     const rowCount = await Seat.updateSeat({
       id,
@@ -49,4 +50,23 @@ module.exports = {
       },
     });
   }),
+
+  getSeats: tryCatchWrapper(async (req, res) => {
+    const seats = await Seat.findAll()
+
+    let seatsList = []
+    if (!isEmpty(seats)) {
+      seatsList = seats.reduce((acc, { dataValues: { id, category, seat_code } }) => {
+        acc.push({ id, category, seat_code })
+        return acc
+      }, [])
+    }
+
+    return sendSuccessResp(res, {
+      data: {
+        seats: seatsList,
+        message: "Seats fetched successfully"
+      },
+    });
+  })
 };
