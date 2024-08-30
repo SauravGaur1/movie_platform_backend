@@ -6,7 +6,6 @@ const { isEmpty } = require("../utils/validators.js");
 
 module.exports = {
     authenticate: () => async (req, res, next) => {
-        console.log("inside authenticate");
         try {
           //req.cookies.token because of app.use(cookieParser()) in app.js;
             const token = req.cookies.token;
