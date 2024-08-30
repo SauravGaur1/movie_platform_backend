@@ -19,16 +19,19 @@ const {
 } = require('./controller');
 
 router.post('/create', [
+  authenticate(1),
   validate(createSchema),
   createAudi,
 ]);
 
 router.patch('/update', [
+  authenticate(1),
   validate(updateSchema),
   updateAudi,
 ]);
 
 router.get('/?audi_id', [
+  authenticate(1),
   validate(audiSchema),
   getAudiById,
 ]);

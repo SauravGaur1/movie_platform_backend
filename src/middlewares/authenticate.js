@@ -5,15 +5,18 @@ const { sanitizeToken } = require('../utils/sanitize.js')
 const { isEmpty } = require('../utils/validators');
 
 module.exports = {
-  authenticate: () => async (req, res, next) => {
+  authenticate: (role = 0) => async (req, res, next) => {
     try {
       const token = sanitizeToken(req.headers['authorization'])
-      if(isEmpty(token)){
-        throw new customError({message : 'Token not Found!'})
+      if (isEmpty(token)) {
+        throw new customError({ message: 'Token not Found!' })
       }
       const decoded = await JWT.verifyToken(token);
-      if(isEmpty(decoded)){
+      if (isEmpty(decoded)) {
         throw new customError({ message: 'Invalid Token!' });
+      }
+      if (decoded.role != role) {
+        throw new customError({ message: "Invalid Role!" })
       }
       req.User = decoded;
       next();
