@@ -5,6 +5,7 @@ const tryCatchWrapper = require('../../../utils/tryCatchWrapper')
 const { Audi } = require('../../../database/index')
 const models = require('../../../database/index')
 const { customError } = require('../../../utils/error')
+const { isEmpty } = require('../../../utils/validators')
 
 
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
         const audi = await Audi.createAudi(req.validatedBody, models)
 
         if (isEmpty(audi)) {
-            throw new customError({ message: 'Invalid id' })
+            throw new customError({ message: 'Invalid id', statusCode: 400 })
         }
 
         return sendSuccessResp(res, {
@@ -24,9 +25,10 @@ module.exports = {
     })),
 
     updateAudi: tryCatchWrapper((async (req, res) => {
-        const audi = await Audi.updateAudi(req.validatedBody, models)
-        if (isEmpty(audi)) {
-            throw new customError({ message: 'Unable to Update' })
+        const rowCount = await Audi.updateAudi(req.validatedBody, models)
+
+        if (!rowCount) {
+            throw new customError({ message: 'Unable to Update', statusCode: 400 })
         }
 
         return sendSuccessResp(res, {
@@ -37,7 +39,8 @@ module.exports = {
     })),
 
     getAudiById: tryCatchWrapper((async (req, res) => {
-        const { id } = req.validatedBody
+        console.log(req)
+        const { audi_id: id } = req.params
         const audi = await Audi.findOne({
             where: {
                 id
@@ -45,7 +48,7 @@ module.exports = {
         })
 
         if (isEmpty(audi)) {
-            throw new customError({ message: 'Invalid id' })
+            throw new customError({ message: 'Invalid id', statusCode: 400 })
         }
 
         const { layout, name, no_of_seats, type } = audi.dataValues
@@ -59,7 +62,8 @@ module.exports = {
     })),
 
     getAudiListByTheatreId: tryCatchWrapper((async (req, res) => {
-        const { theater_id } = req.validatedBody
+        const { theater_id } = req.params
+        console.log(theater_id)
         const audi = await Audi.findAll({
             where: {
                 theater_id
@@ -67,12 +71,12 @@ module.exports = {
         })
 
         if (isEmpty(audi)) {
-            throw new customError({ message: 'Invalid Theater id' })
+            throw new customError({ message: 'Invalid Theater id', statusCode: 400 })
         }
 
         const audiData = audi.reduce((acc, { dataValues: { layout, name, no_of_seats, type } }) => {
             acc.push({ layout, name, no_of_seats, type })
-            return push
+            return acc
         }, [])
 
         return sendSuccessResp(res, {

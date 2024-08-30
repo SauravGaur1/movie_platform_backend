@@ -30,14 +30,13 @@ router.patch('/update', [
   updateAudi,
 ]);
 
-router.get('/?audi_id', [
+router.get('/audi_id/:audi_id', [
   authenticate(1),
-  validate(audiSchema),
   getAudiById,
 ]);
 
-router.get('/?theatre_id', [
-  validate(audiListSchema),
+router.get('/theater_id/:theater_id', [
+  authenticate(1),
   getAudiListByTheatreId,
 ]);
 

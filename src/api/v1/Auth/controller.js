@@ -22,11 +22,11 @@ module.exports = {
             });
 
             if (userExists !== -1) {
-              throw new customError({
-                message: 'User already exists!',
-                statusCode: 400,
-                payload: { isExist: true }
-              })
+                throw new customError({
+                    message: 'User already exists!',
+                    statusCode: 400,
+                    payload: { isExist: true }
+                })
             }
 
             const { dataValues: user } = await roleMap[role].createUser({
@@ -39,7 +39,7 @@ module.exports = {
             const token = await generateUserToken(user, role);
 
             res.cookie("token", token, {
-                httpOnly: true, 
+                httpOnly: true,
                 maxAge: tokenMaxAge,
             });
 
@@ -75,8 +75,8 @@ module.exports = {
                 throw new customError({
                     message: "User does'nt exists!",
                     statusCode: 400,
-                    payload: { 
-                        isExist: true 
+                    payload: {
+                        isExist: true
                     }
                 })
             }
@@ -93,26 +93,27 @@ module.exports = {
             const token = await generateUserToken(user?.dataValues, role);
 
             res.cookie("token", token, {
-                httpOnly: true, 
+                httpOnly: true,
                 maxAge: tokenMaxAge,
             });
 
             return sendSuccessResp(res, {
                 data: {
                     isExist: true,
+                    id: user.dataValues.id,
                     message: "valid login deatils, Access Provided",
                     token,
                 },
             });
 
         } catch (err) {
-          return sendFailureResp(res, {
-            status: err.statusCode,
-            data: {
-              message: err.message,
-              ...err.payload,
-            },
-          });
+            return sendFailureResp(res, {
+                status: err.statusCode,
+                data: {
+                    message: err.message,
+                    ...err.payload,
+                },
+            });
         }
     },
 };

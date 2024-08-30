@@ -79,13 +79,16 @@ class Audi extends Model {
       }
     }
 
-    const { dataValues: audi } = await this.update({
+    const [count, rows] = await this.update({
       type,
       name,
       layout,
       no_of_seats
+    }, {
+      where: { id }
     })
-    return audi
+
+    return count
   }
 }
 
@@ -133,7 +136,7 @@ Audi.init(
 );
 
 
-const validateLayout = async ({ layout, no_of_seats }, { Seat }) => {
+async function validateLayout({ layout, no_of_seats }, { Seat }) {
 
   try {
     const flatLayout = layout.flat()
@@ -142,7 +145,7 @@ const validateLayout = async ({ layout, no_of_seats }, { Seat }) => {
     }, 0)
 
     if (count != no_of_seats) {
-      throw new customError('Invalid No. of Seats')
+      throw new customError({ message: 'Invalid No. of Seats', statusCode: 400 })
     }
 
     const seatsInLayout = new Set(flatLayout)
@@ -162,7 +165,7 @@ const validateLayout = async ({ layout, no_of_seats }, { Seat }) => {
     return isEmpty(difference)
   }
   catch (err) {
-    throw new customError(err.message)
+    throw new customError({ message: err.message, statusCode: err.statusCode })
   }
 
 }

@@ -4,7 +4,7 @@ const common = {
   id: Joi.number().required(),
   theater_id: Joi.number().positive().required(),
   name: Joi.string().trim(),
-  type: Joi.string().trim(),
+  type: Joi.number(),
   layout: Joi.array().items(Joi.array().items(Joi.number().integer().min(0).max(14))),
   no_of_seats: Joi.number().integer().positive().max(1000)
 }
@@ -25,17 +25,7 @@ const updateSchema = Joi.object({
   no_of_seats: common.no_of_seats
 }).or("name", "type", "layout").and("layout", "no_of_seats")
 
-const audiSchema = Joi.object({
-  id: common.id
-});
-
-const audiListSchema = Joi.object({
-  theater_id: common.theater_id
-});
-
 module.exports = {
   createSchema,
-  updateSchema,
-  audiSchema,
-  audiListSchema,
+  updateSchema
 };
