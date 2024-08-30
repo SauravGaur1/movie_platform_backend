@@ -89,12 +89,6 @@ module.exports = {
     listFiles: S3Service.listFiles,
 };
 
-const filePath = path.resolve("public/dice.jpg");
-// console.log(filePath);
-// const keyName = "movie/thumbnail2/dice2.jpg"; // The name you want to save the file as
-const keyName = "movie/101/thumbnail/dice3.jpg"; // The name you want to save the file as
-const movieNumber = 101;
-const fileCategory = "thumbnail";
 
 //----------------To Download a File----------------
 // (async () => {
