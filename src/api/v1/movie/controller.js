@@ -11,13 +11,6 @@ const { isEmpty, isArray } = require("../../../utils/validators.js");
 module.exports = {
     addMovie: async (req, res, next) => {
         try {
-            // if verified, Authenticate middleware will have added a new User prop to request
-            if (!isEmpty(req.User) && req.User.role < 1) {
-                throw new customError({
-                    message: "User not Allowed on this Path!",
-                    statusCode: 401,
-                });
-            }
             const { title } = req.body;
             const movieExists = await Movie.findMovie(title);
             // console.log(movieExists);
@@ -56,12 +49,6 @@ module.exports = {
     },
     downloadFiles: async (req, res) => {
         try {
-            if (!isEmpty(req.User) && req.User.role < 1) {
-                throw new customError({
-                    message: "User not Allowed on this Path!",
-                    statusCode: 401,
-                });
-            }
             const movieNumber = req.query.movieId;
             const fileCategory = req.query.fileCategory;
 
@@ -101,17 +88,6 @@ module.exports = {
             }
 
             res.end();
-
-            // const key = files[0]; // You can change this logic to download all files
-            // const s3Stream = await downloadFile(key);
-            // console.log(s3Stream);
-
-            // Set headers
-            // res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(key.split('/').pop())}"`);
-            // res.setHeader('Content-Type', 'application/octet-stream');
-
-            // Pipe the S3 stream to the response
-            // s3Stream.pipe(res);
         } catch (err) {
             return sendFailureResp(res, {
                 status: err.statusCode,
@@ -124,12 +100,6 @@ module.exports = {
     },
     addFiles: async (req, res) => {
         try {
-            if (!isEmpty(req.User) && req.User.role < 1) {
-                throw new customError({
-                    message: "User not Allowed on this Path!",
-                    statusCode: 401,
-                });
-            }
         } catch (err) {
             return sendFailureResp(res, {
                 status: err.statusCode,
