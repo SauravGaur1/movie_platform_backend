@@ -6,10 +6,10 @@ const {
 const { listFiles, downloadFile } = require("../../../services/aws_s3.js");
 const { customError } = require("../../../utils/error.js");
 const { Movie } = require("../../../database/index.js");
-const { isEmpty } = require("../../../utils/validators.js");
+const { isEmpty, isArray } = require("../../../utils/validators.js");
 
 module.exports = {
-    add: async (req, res, next) => {
+    addMovie: async (req, res, next) => {
         try {
             // if verified, Authenticate middleware will have added a new User prop to request
             if (!isEmpty(req.User) && req.User.role < 1) {
@@ -54,16 +54,22 @@ module.exports = {
             });
         }
     },
-    files: async (req, res) => {
+    downloadFiles: async (req, res) => {
         try {
-            const movieNumber = 101;
-            const fileCategory = "thumbnail";
+            if (!isEmpty(req.User) && req.User.role < 1) {
+                throw new customError({
+                    message: "User not Allowed on this Path!",
+                    statusCode: 401,
+                });
+            }
+            const movieNumber = req.query.movieId;
+            const fileCategory = req.query.fileCategory;
 
             const prefix = `movie/${movieNumber}/${fileCategory}`;
 
             const files = await listFiles(prefix);
-            
-            if (!files || files.length == 0) {
+
+            if (isEmpty(files)) {
                 throw new customError({
                     message: "No files found in specifies Directory",
                     statusCode: 404,
@@ -106,6 +112,24 @@ module.exports = {
 
             // Pipe the S3 stream to the response
             // s3Stream.pipe(res);
+        } catch (err) {
+            return sendFailureResp(res, {
+                status: err.statusCode,
+                data: {
+                    message: err.message,
+                    ...err.payload,
+                },
+            });
+        }
+    },
+    addFiles: async (req, res) => {
+        try {
+            if (!isEmpty(req.User) && req.User.role < 1) {
+                throw new customError({
+                    message: "User not Allowed on this Path!",
+                    statusCode: 401,
+                });
+            }
         } catch (err) {
             return sendFailureResp(res, {
                 status: err.statusCode,
