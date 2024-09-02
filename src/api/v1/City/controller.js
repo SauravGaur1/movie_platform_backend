@@ -98,6 +98,41 @@ cityController = {
             )
         }
     },
+    searchCityByLatLong :  async (req, res) => {
+
+        try {
+            let { lat : latitude } = req.query;
+            let { long : longitude } = req.query;
+
+            if(isEmpty(latitude) || isEmpty(longitude)) {
+                throw new customError({
+                    statusCode: 200,
+                    message : "Invalid Latitude or Longitude"
+                });
+            }
+
+            const cities = await City.searchCityByLatLong(latitude,longitude);
+            sendSuccessResp(
+                res,
+                {
+                    status: 200,
+                    data: {
+                        cities: cities,
+                    }
+                }
+            )
+        } catch (err) {
+            sendFailureResp(
+                res,
+                {
+                    status : err.statusCode,
+                    data: {
+                        message: err.message,
+                    }
+                }
+            )
+        }
+    },
 
 }
 
