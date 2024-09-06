@@ -96,6 +96,37 @@ class City extends Model {
             throw e;
         }
     }
+
+    static async searchCityByLatLong(lat,long) {
+        try {
+            // 0.009 is equal to 1KM
+            let searchParameter = 10 * 0.009;
+
+            lat = parseFloat(lat);
+            long = parseFloat(long);
+
+            const cities = await City.findAll(
+                {
+                    attributes:[ "id" , "name", ],
+                    order: [
+                        ["latitude"]
+                    ],
+                    where: {
+                        latitude :  {
+                            [Op.between]: [lat - searchParameter,lat + searchParameter]
+                        },
+                        longitude :  {
+                            [Op.between]: [long - searchParameter,long + searchParameter]
+                        },
+                    }
+                }
+            );
+
+            return cities;
+        } catch (e) {
+            throw e;
+        }
+    }
 }
 
 City.init(
