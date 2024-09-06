@@ -1,10 +1,24 @@
 const { sendFailureResp } = require('../utils/response');
 const JWT = require('../services/jwt.js');
+const { customError } = require('../utils/error.js');
+const { sanitizeToken } = require('../utils/sanitize.js')
+const { isEmpty } = require('../utils/validators');
+const { USER } = require('../config/config.js').roleMap
 
 module.exports = {
-  authenticate: () => async (req, res, next) => {
+  authenticate: (role = USER) => async (req, res, next) => {
     try {
-      const decoded = await JWT.verifyToken(req.body.token);
+      const token = sanitizeToken(req.headers['authorization'])
+      if (isEmpty(token)) {
+        throw new customError({ message: 'Token not Found!' })
+      }
+      const decoded = await JWT.verifyToken(token);
+      if (isEmpty(decoded)) {
+        throw new customError({ message: 'Invalid Token!' });
+      }
+      if (decoded.role != role) {
+        throw new customError({ message: "Invalid Role!" })
+      }
       req.User = decoded;
       next();
     } catch (error) {

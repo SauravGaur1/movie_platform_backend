@@ -40,5 +40,38 @@ module.exports = {
             0: User,
             1: Admin
         }
+    },
+    seatCodes: {
+        1: "Standard",
+        2: "Premium",
+        3: "Recliner",
+        4: "Couple",
+        5: "Luxury",
+        6: "Accessible",
+        7: "Balcony",
+        8: "Box",
+        9: "Love",
+        10: "Front Row",
+        11: "Bean Bag",
+        12: "VIP",
+        13: "Child",
+        14: "Prime"
+    },
+    audiTypes: {
+        0: "Regular",
+        1: "Premium",
+        2: "VIP",
+        3: "IMAX",
+        4: "3D",
+        5: "4DX",
+        6: "Dolby Atmos",
+        7: "Luxury",
+        8: "Private",
+        9: "Outdoor"
+    },
+    roleMap: {
+        USER : 0,
+        ADMIN : 1,
+        SUPER_ADMIN : 2,
     }
 };
