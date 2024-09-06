@@ -1,6 +1,8 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes, Op } = require("sequelize");
 
 const { sequelize } = require("../../../database/database.js");
+const { isEmpty } = require("../../../utils/validators.js");
+const { customError } = require("../../../utils/error.js");
 
 class Theaters extends Model {
     static associate(models) {
@@ -15,6 +17,39 @@ class Theaters extends Model {
         Theaters.hasMany(models.Audi, {
             foreignKey: "theater_id",
         });
+    }
+
+    static async createTheater({
+        admin_id,
+        name,
+        city_id,
+        pincode,
+        latitude,
+        longitude
+    }) {
+        try {
+            const data = await this.findOne({
+                [Op.and]: [{ latitude }, { longitude }, { admin_id }]
+            })
+            
+            if (!isEmpty(data)) {
+                throw new customError({ message: "Theater already exists" })
+            }
+
+            const { dataValues: theater } = await this.create({
+                admin_id,
+                name,
+                city_id,
+                pincode,
+                latitude,
+                longitude
+            })
+            return theater
+
+        }
+        catch (err) {
+            throw new customError({ message: err.message })
+        }
     }
 }
 

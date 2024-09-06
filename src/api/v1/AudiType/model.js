@@ -1,13 +1,37 @@
-const { Model, DataTypes } = require("sequelize");
-
+const { Model, DataTypes, Op } = require("sequelize");
+const { customError } = require('../../../utils/error');
 const { sequelize } = require("../../../database/database.js");
+const { isEmpty } = require("../../../utils/validators.js");
 
 class AudiType extends Model {
   static associate(models) {
-    AudiType.hasMany(models.Audi,{
-      foreignKey:'type'
+    AudiType.hasMany(models.Audi, {
+      foreignKey: 'type'
     });
   }
+
+  static async createAudiType({ title, short_name }) {
+    try {
+      const data = await this.findOne({
+        where: {
+          title,
+        },
+      });
+
+      if (!isEmpty(data)) {
+        throw new customError({ message: "AudiType already exists" })
+      }
+
+      const audiType = await this.create({
+        title, short_name
+      })
+
+      return audiType;
+    } catch (err) {
+      throw new customError({ message: err.message });
+    }
+  }
+
 }
 
 AudiType.init(
