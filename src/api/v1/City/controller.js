@@ -1,8 +1,9 @@
 const { sendSuccessResp, sendFailureResp } = require('../../../utils/response.js');
 
-const { City} = require('../../../database/index.js');
+const { City } = require('../../../database/index.js');
 const { isEmpty } = require('../../../utils/validators.js')
 const { customError } = require("../../../utils/error");
+
 cityController = {
 
     getPopularCities :  async (req, res) => {
