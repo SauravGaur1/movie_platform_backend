@@ -29,7 +29,7 @@ class Seat extends Model {
       if (isEmpty(isExist)) {
         throw new customError({ message: 'Invalid Id', statusCode: 400 })
       }
-      const [count, rows] = await this.update(
+      const [count] = await this.update(
         {
           category, seat_code
         },

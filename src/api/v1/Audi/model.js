@@ -79,7 +79,7 @@ class Audi extends Model {
       }
     }
 
-    const [count, rows] = await this.update({
+    const [count] = await this.update({
       type,
       name,
       layout,

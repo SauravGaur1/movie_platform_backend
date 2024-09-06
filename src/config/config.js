@@ -68,6 +68,10 @@ module.exports = {
         7: "Luxury",
         8: "Private",
         9: "Outdoor"
+    },
+    roleMap: {
+        USER : 0,
+        ADMIN : 1,
+        SUPER_ADMIN : 2,
     }
-
 };

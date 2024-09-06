@@ -31,7 +31,7 @@ class Theaters extends Model {
             const data = await this.findOne({
                 [Op.and]: [{ latitude }, { longitude }, { admin_id }]
             })
-            console.log(data)
+            
             if (!isEmpty(data)) {
                 throw new customError({ message: "Theater already exists" })
             }
