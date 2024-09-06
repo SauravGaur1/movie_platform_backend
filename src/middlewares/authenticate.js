@@ -3,9 +3,10 @@ const JWT = require('../services/jwt.js');
 const { customError } = require('../utils/error.js');
 const { sanitizeToken } = require('../utils/sanitize.js')
 const { isEmpty } = require('../utils/validators');
+const { USER } = require('../config/config.js').roleMap
 
 module.exports = {
-  authenticate: (role = 0) => async (req, res, next) => {
+  authenticate: (role = USER) => async (req, res, next) => {
     try {
       const token = sanitizeToken(req.headers['authorization'])
       if (isEmpty(token)) {
