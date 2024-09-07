@@ -3,7 +3,11 @@ const {
     sendFailureResp,
 } = require("../../../utils/response.js");
 
-const { listFiles, downloadFile } = require("../../../services/aws_s3.js");
+const {
+    listFiles,
+    downloadFile,
+    uploadFile,
+} = require("../../../services/aws_s3.js");
 const { customError } = require("../../../utils/error.js");
 const { Movie } = require("../../../database/index.js");
 const { isEmpty, isArray } = require("../../../utils/validators.js");
@@ -100,6 +104,49 @@ module.exports = {
     },
     addFiles: async (req, res) => {
         try {
+            // console.log(req);
+            // console.log(req.body);
+            // console.log(1);
+            const upload = uploadFile().array("file", 1);
+            upload(req, res, function (err) {
+                if (err) {
+                    throw new customError(
+                        `Failed to upload file: ${err.message}`,
+                        500,
+                        err.payload
+                    );
+                }
+            });
+            sendSuccessResp(res, {
+                status: 200,
+                data: {
+                    message: "succesfully uploaded file",
+                },
+            });
+
+            // console.log(2);
+            // upload
+            // console.log(3);
+
+            // console.log(upload());
+            // upload(req, res, (err) => {
+            //     if (err) {
+            //         throw new customError(
+            //             `Failed to set file name: ${err?.message}`,
+            //             500,
+            //             ...err?.payload
+            //         );
+            //     }
+            // });
+
+            // result();
+
+            // sendSuccessResp(res, {
+            //     status: 200,
+            //     data: {
+            //         message: "succesfully uploaded file",
+            //     },
+            // });
         } catch (err) {
             return sendFailureResp(res, {
                 status: err.statusCode,
